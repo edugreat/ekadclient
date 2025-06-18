@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { NgTemplateOutlet } from '@angular/common';
-import { DocsExampleComponent } from '@docs-components/public-api';
+import { DocsExampleComponent } from '../../../components/docs-example/docs-example.component';
 import {
   BorderDirective,
   ButtonDirective,

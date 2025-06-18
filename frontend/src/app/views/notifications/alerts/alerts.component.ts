@@ -16,7 +16,7 @@ import {
   ThemeDirective
 } from '@coreui/angular';
 import { IconDirective } from '@coreui/icons-angular';
-import { DocsExampleComponent } from '@docs-components/public-api';
+import { DocsExampleComponent } from '../../../components/docs-example/docs-example.component';
 
 @Component({
     selector: 'app-alerts',

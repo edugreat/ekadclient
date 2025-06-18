@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
-import { DocsExampleComponent } from '@docs-components/public-api';
+import { DocsExampleComponent } from '../../../components/docs-example/docs-example.component';
 import {
   ButtonCloseDirective,
   ButtonDirective,

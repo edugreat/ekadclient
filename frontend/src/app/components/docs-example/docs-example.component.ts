@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, computed, inject, input } from '@angular/core';
 
-import packageJson from '../../../package.json';
+import packageJson from '../../../../package.json';
 import { IconDirective } from '@coreui/icons-angular';
 import { RouterLink } from '@angular/router';
 import { NavComponent, NavItemComponent, NavLinkDirective } from '@coreui/angular';

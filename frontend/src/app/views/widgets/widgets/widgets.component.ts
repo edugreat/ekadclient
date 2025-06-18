@@ -3,7 +3,7 @@ import { WidgetsBrandComponent } from '../widgets-brand/widgets-brand.component'
 import { IconDirective } from '@coreui/icons-angular';
 import { WidgetsEComponent } from '../widgets-e/widgets-e.component';
 import { WidgetsDropdownComponent } from '../widgets-dropdown/widgets-dropdown.component';
-import { DocsExampleComponent } from '@docs-components/public-api';
+import { DocsExampleComponent } from '../../../components/docs-example/docs-example.component';
 import { TextColorDirective, CardComponent, CardHeaderComponent, CardBodyComponent, RowComponent, ColComponent, WidgetStatBComponent, ProgressBarDirective, ProgressComponent, WidgetStatFComponent, TemplateIdDirective, CardGroupComponent, WidgetStatCComponent } from '@coreui/angular';
 
 @Component({

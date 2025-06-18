@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
-import { DocsExampleComponent } from '@docs-components/public-api';
+import { DocsExampleComponent } from '../../../components/docs-example/docs-example.component';
 import {
   ButtonDirective,
   ButtonGroupComponent,

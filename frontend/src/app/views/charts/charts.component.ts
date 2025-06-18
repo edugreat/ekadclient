@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { ChartData } from 'chart.js';
 import { ChartjsComponent } from '@coreui/angular-chartjs';
 import { RowComponent, ColComponent, TextColorDirective, CardComponent, CardHeaderComponent, CardBodyComponent } from '@coreui/angular';
-import { DocsCalloutComponent } from '@docs-components/public-api';
+import { DocsCalloutComponent } from '../../components/docs-callout/docs-callout.component';
 
 @Component({
     selector: 'app-charts',

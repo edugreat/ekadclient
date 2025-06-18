@@ -1,6 +1,6 @@
 import { Component, signal, inject } from '@angular/core';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
-import { DocsExampleComponent } from '@docs-components/public-api';
+import { DocsExampleComponent } from '../../../components/docs-example/docs-example.component';
 import {
   ButtonDirective,
   CardBodyComponent,
