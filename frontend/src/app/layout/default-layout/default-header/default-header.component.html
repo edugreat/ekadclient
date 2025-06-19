@@ -111,7 +111,7 @@
       </li>
       <li></li>
       <li>
-        <a cDropdownItem routerLink="">
+        <a cDropdownItem routerLink="/login">
           <svg cIcon class="me-2" name="cilUser"></svg>
           Profile
         </a>
@@ -157,7 +157,7 @@
       </li>
 
       <li>
-        <a cDropdownItem routerLink="">
+        <a [routerLink]="['/login']" routerLinkActive="router-link-active"  cDropdownItem routerLink="">
           <svg cIcon class="me-2" size="l" [cIcon]="login"></svg>
          Login
         </a>

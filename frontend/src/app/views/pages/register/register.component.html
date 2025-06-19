@@ -6,29 +6,104 @@
           <c-card-body class="p-4">
             <form cForm>
               <h1>Register</h1>
-              <p class="text-body-secondary">Create your account</p>
-              <c-input-group class="mb-3">
-                <span cInputGroupText>
-                  <svg cIcon name="cilUser"></svg>
-                </span>
-                <input autoComplete="name" cFormControl placeholder="Username" />
-              </c-input-group>
+              <p class="text-body-secondary">Create your student account</p>
+              
+              <div class="row mb-3">
+                <div class="col-md-6">
+                  <c-input-group>
+                    <span cInputGroupText>
+                      <svg cIcon name="cilUser"></svg>
+                    </span>
+                    <input autoComplete="given-name" cFormControl placeholder="First Name" required />
+                  </c-input-group>
+                </div>
+                <div class="col-md-6 mt-3 mt-md-0">
+                  <c-input-group>
+                    <span cInputGroupText>
+                      <svg cIcon name="cilUser"></svg>
+                    </span>
+                    <input autoComplete="family-name" cFormControl placeholder="Last Name" required />
+                  </c-input-group>
+                </div>
+              </div>
+
               <c-input-group class="mb-3">
                 <span cInputGroupText>&#64;</span>
-                <input autoComplete="email" cFormControl placeholder="Email" />
+                <input autoComplete="email" cFormControl placeholder="Email" type="email" required />
               </c-input-group>
+
               <c-input-group class="mb-3">
+                <span cInputGroupText>
+                  <svg cIcon name="cilPhone"></svg>
+                </span>
+                <input autoComplete="tel" cFormControl placeholder="Phone Number (Optional)" type="tel" />
+              </c-input-group>
+
+              <div class="mb-3">
+                <label class="form-label">Student Level</label>
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="studentLevel" id="junior" checked>
+                  <label class="form-check-label" for="junior">
+                    Junior Student
+                  </label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="studentLevel" id="senior">
+                  <label class="form-check-label" for="senior">
+                    Senior Student
+                  </label>
+                </div>
+              </div>
+                <c-input-group class="mb-3">
                 <span cInputGroupText>
                   <svg cIcon name="cilLockLocked"></svg>
                 </span>
-                <input autoComplete="new-password" cFormControl placeholder="Password" type="password" />
+                <input #passwordInput 
+                       autoComplete="new-password" 
+                       cFormControl 
+                       placeholder="Password" 
+                       [type]="showPassword ? 'text' : 'password'" 
+                       required />
+                <span cInputGroupText class="password-toggle">
+                  <button type="button" 
+                          class="btn btn-link p-0 border-0" 
+                          (click)="togglePasswordVisibility(passwordInput)">
+                    <mat-icon class="text-body">{{ showPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+                  </button>
+                </span>
               </c-input-group>
+
               <c-input-group class="mb-4">
                 <span cInputGroupText>
                   <svg cIcon name="cilLockLocked"></svg>
                 </span>
-                <input autoComplete="new-password" cFormControl placeholder="Repeat password" type="password" />
+                <input #repeatPasswordInput 
+                       autoComplete="new-password" 
+                       cFormControl 
+                       placeholder="Repeat password" 
+                       [type]="showPassword ? 'text' : 'password'" 
+                       required />
+                <span cInputGroupText class="password-toggle">
+                  <button type="button" 
+                          class="btn btn-link p-0 border-0" 
+                          (click)="togglePasswordVisibility(repeatPasswordInput)">
+                    <mat-icon class="text-body">{{ showPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+                  </button>
+                </span>
               </c-input-group>
+
+              <div class="form-check mb-4">
+                <input class="form-check-input" type="checkbox" id="instructorCheck" (change)="toggleInstructorOption()">
+                <label class="form-check-label" for="instructorCheck">
+                  I am an instructor
+                </label>
+              </div>
+
+              <div *ngIf="showInstructorOption" class="mb-3 text-center">
+                <p>Instructors should register through our dedicated portal</p>
+                <button cButton color="primary" routerLink="/instructor-register">Sign Up Here</button>
+              </div>
+
               <div class="d-grid">
                 <button cButton color="success">Create Account</button>
               </div>
