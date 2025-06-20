@@ -4,94 +4,138 @@
       <c-col lg="7" md="9" xl="6">
         <c-card class="mx-4">
           <c-card-body class="p-4">
-            <form cForm>
-              <h1>Register</h1>
+            <form cForm [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+              <div class="d-flex justify-content-between align-items-center mb-3">
+                <h1 class="mb-0">Register</h1>
+                <div *ngIf="errorMessage" id="errorMsg" class="text-danger small text-end">
+                  {{ errorMessage }}
+                </div>
+              </div>
               <p class="text-body-secondary">Create your student account</p>
               
+             
+
+              <!-- First Name -->
               <div class="row mb-3">
                 <div class="col-md-6">
                   <c-input-group>
                     <span cInputGroupText>
                       <svg cIcon name="cilUser"></svg>
                     </span>
-                    <input autoComplete="given-name" cFormControl placeholder="First Name" required />
+                    <input formControlName="firstName" autoComplete="given-name" cFormControl placeholder="First Name" required />
                   </c-input-group>
+                  <!-- First Name Error -->
+                  <div *ngIf="firstName?.invalid && (firstName?.dirty || firstName?.touched)" class="text-danger small mt-1">
+                    <div *ngIf="firstName?.errors?.['required']"><small>First name is required</small></div>
+                    <div *ngIf="firstName?.errors?.['invalidName']">
+                      <small>Name must be at least 2 alphabetic characters</small>
+                    </div>
+                  </div>
                 </div>
+
+                <!-- Last Name -->
                 <div class="col-md-6 mt-3 mt-md-0">
                   <c-input-group>
                     <span cInputGroupText>
                       <svg cIcon name="cilUser"></svg>
                     </span>
-                    <input autoComplete="family-name" cFormControl placeholder="Last Name" required />
+                    <input formControlName="lastName" autoComplete="family-name" cFormControl placeholder="Last Name" required />
                   </c-input-group>
+                  <!-- Last Name Error -->
+                  <div *ngIf="lastName?.invalid && (lastName?.dirty || lastName?.touched)" class="text-danger small mt-1">
+                    <div *ngIf="lastName?.errors?.['required']"><small>Last name is required</small></div>
+                    <div *ngIf="lastName?.errors?.['invalidName']">
+                      <small>Name must be at least 2 alphabetic characters</small>
+                    </div>
+                  </div>
                 </div>
               </div>
 
-              <c-input-group class="mb-3">
-                <span cInputGroupText>&#64;</span>
-                <input autoComplete="email" cFormControl placeholder="Email" type="email" required />
-              </c-input-group>
+              <!-- Email -->
+              <div class="mb-3">
+                <c-input-group>
+                  <span cInputGroupText>&#64;</span>
+                  <input formControlName="email" autoComplete="email" cFormControl placeholder="Email" type="email" required />
+                </c-input-group>
+                <!-- Email Error -->
+                <div *ngIf="email?.invalid && (email?.dirty || email?.touched)" class="text-danger small mt-1">
+                  <div *ngIf="email?.errors?.['required']"><small>Email is required</small></div>
+                  <div *ngIf="email?.errors?.['email']"><small>Please enter a valid email</small></div>
+                </div>
+              </div>
 
+              <!-- mobileNumber (optional) -->
               <c-input-group class="mb-3">
                 <span cInputGroupText>
                   <svg cIcon name="cilPhone"></svg>
                 </span>
-                <input autoComplete="tel" cFormControl placeholder="Phone Number (Optional)" type="tel" />
+                <input formControlName="mobileNumber" autoComplete="tel" cFormControl placeholder="mobileNumber Number (Optional)" type="tel" />
               </c-input-group>
-
-              <div class="mb-3">
-                <label class="form-label">Student Level</label>
-                <div class="form-check">
-                  <input class="form-check-input" type="radio" name="studentLevel" id="junior" checked>
-                  <label class="form-check-label" for="junior">
-                    Junior Student
-                  </label>
+              <!-- mobileNumber Number Error (if provided) -->
+              <div *ngIf="!mobileNumberValid" class="text-danger small mt-1">
+                  <small>Invalid mobileNumber  format</small>
                 </div>
-                <div class="form-check">
-                  <input class="form-check-input" type="radio" name="studentLevel" id="senior">
-                  <label class="form-check-label" for="senior">
-                    Senior Student
-                  </label>
+              
+
+              <!-- Student Status -->
+              <div class="mb-3">
+                <label for="status" class="form-label">Student Status</label>
+                <select formControlName="status" id="status" class="form-select" required>
+                  <option value="" disabled selected>Select your level</option>
+                  <option value="junior">Junior Student</option>
+                  <option value="senior">Senior Student</option>
+                </select>
+              </div>
+
+              <!-- Password -->
+              <div class="mb-3">
+                <c-input-group>
+                  <span cInputGroupText>
+                    <svg cIcon name="cilLockLocked"></svg>
+                  </span>
+                  <input formControlName="password" #passwordInput autoComplete="new-password" cFormControl
+                    placeholder="Password" [type]="showPassword ? 'text' : 'password'" required />
+                  <span cInputGroupText class="password-toggle">
+                    <button type="button" class="btn btn-link p-0 border-0"
+                      (click)="togglePasswordVisibility(passwordInput)">
+                      <mat-icon class="text-body">{{ showPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+                    </button>
+                  </span>
+                </c-input-group>
+                <!-- Password Error -->
+                <div *ngIf="password?.invalid && (password?.dirty || password?.touched)" class="text-danger small mt-1">
+                  <div *ngIf="password?.errors?.['required']"><small>Password is required</small></div>
+                  <div *ngIf="password?.errors?.['invalidPassword']">
+                    <small>Must be at least 8 characters with 1 uppercase, 1 lowercase, 1 number, and 1 special character</small>
+                  </div>
                 </div>
               </div>
-                <c-input-group class="mb-3">
-                <span cInputGroupText>
-                  <svg cIcon name="cilLockLocked"></svg>
-                </span>
-                <input #passwordInput 
-                       autoComplete="new-password" 
-                       cFormControl 
-                       placeholder="Password" 
-                       [type]="showPassword ? 'text' : 'password'" 
-                       required />
-                <span cInputGroupText class="password-toggle">
-                  <button type="button" 
-                          class="btn btn-link p-0 border-0" 
-                          (click)="togglePasswordVisibility(passwordInput)">
-                    <mat-icon class="text-body">{{ showPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
-                  </button>
-                </span>
-              </c-input-group>
 
-              <c-input-group class="mb-4">
-                <span cInputGroupText>
-                  <svg cIcon name="cilLockLocked"></svg>
-                </span>
-                <input #repeatPasswordInput 
-                       autoComplete="new-password" 
-                       cFormControl 
-                       placeholder="Repeat password" 
-                       [type]="showPassword ? 'text' : 'password'" 
-                       required />
-                <span cInputGroupText class="password-toggle">
-                  <button type="button" 
-                          class="btn btn-link p-0 border-0" 
-                          (click)="togglePasswordVisibility(repeatPasswordInput)">
-                    <mat-icon class="text-body">{{ showPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
-                  </button>
-                </span>
-              </c-input-group>
+              <!-- Repeat Password -->
+              <div class="mb-4">
+                <c-input-group>
+                  <span cInputGroupText>
+                    <svg cIcon name="cilLockLocked"></svg>
+                  </span>
+                  <input formControlName="repeatPassword" #repeatPasswordInput autoComplete="new-password" cFormControl
+                    placeholder="Repeat password" [type]="showRepeatPassword ? 'text' : 'password'" required />
+                  <span cInputGroupText class="password-toggle">
+                    <button type="button" class="btn btn-link p-0 border-0"
+                      (click)="togglePasswordVisibility(repeatPasswordInput)">
+                      <mat-icon class="text-body">{{ showRepeatPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+                    </button>
+                  </span>
+                </c-input-group>
+                <!-- Repeat Password Error -->
+                <div *ngIf="!passwordsMatch && ( repeatPassword?.touched)" class="text-danger small mt-1">
+                  <div *ngIf="repeatPassword?.errors?.['required']"><small>Please repeat your password</small></div>
+                  <div>
+                    <small>Passwords do not match</small>
+                  </div>
+                </div>
+              </div>
 
+              <!-- Instructor Option -->
               <div class="form-check mb-4">
                 <input class="form-check-input" type="checkbox" id="instructorCheck" (change)="toggleInstructorOption()">
                 <label class="form-check-label" for="instructorCheck">
@@ -104,8 +148,11 @@
                 <button cButton color="primary" routerLink="/instructor-register">Sign Up Here</button>
               </div>
 
+              <!-- Submit Button -->
               <div class="d-grid">
-                <button cButton color="success">Create Account</button>
+                <button [disabled]="disableSubmission() || !passwordsMatch" type="submit" cButton color="success">
+                  Create Account
+                </button>
               </div>
             </form>
           </c-card-body>
@@ -113,4 +160,14 @@
       </c-col>
     </c-row>
   </c-container>
+</div>
+
+<div class="text-muted small">
+  Form valid: {{registerForm.valid}} | 
+  Passwords match: {{passwordsMatch}} |
+  FirstName valid: {{firstName.valid}} |
+  LastName valid: {{lastName.valid}} |
+  Email valid: {{email.valid}}|
+  Disable submission: {{disableSubmission()}} |
+  mobileNumber valid: {{mobileNumberValid}}
 </div>
