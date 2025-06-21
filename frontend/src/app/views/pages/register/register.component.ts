@@ -19,7 +19,7 @@ import {
 } from '@coreui/angular';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, AbstractControl, FormControl } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, AbstractControl, FormControl, FormsModule } from '@angular/forms';
 import { emailValidator, nameValidator, passwordValidator, phoneNumberValidator, } from '../../valid.credential';
 import { StudentRegisterationData, RegisterationService } from './registeration.service';
 import { take } from 'rxjs';
@@ -46,6 +46,7 @@ import { Router } from '@angular/router';
       ButtonDirective,
       MatIconModule,
       ReactiveFormsModule,
+      FormsModule
      
       
     ],
@@ -68,6 +69,16 @@ export class RegisterComponent implements OnInit {
   errorMessage = '';
    passwordsMatch = true;
    mobileNumberValid = true;
+
+   selectedCountry: string = '';
+countries: string[] = [
+  'United States',
+  'Canada',
+  'United Kingdom',
+  'Australia',
+  'Nigeria'
+  // Later, a service would be provided to fetch countries dynamically, used to provide proper phone number format and validation
+].sort((a, b) => a.localeCompare(b)); // Sort countries alphabetically
 
    @ViewChild('repeatPasswordInput')repeatPasswordInput!:ElementRef<HTMLInputElement>;
 

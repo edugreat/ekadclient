@@ -5,36 +5,89 @@
         <c-card-group>
           <c-card class="p-4">
             <c-card-body>
-              <form cForm>
+              <form cForm [formGroup]="loginForm" (ngSubmit)="login()">
+                <!-- Status Message -->
+                <div class="text-center mb-3">
+                  <div *ngIf="loginStatus() === 'success'" class="text-success">
+                    <svg cIcon name="cilThumbUp" size="xl" class="animate__animated animate__bounceIn"></svg>
+                    <p class="mt-2">Login successful!</p>
+                  </div>
+                  <div *ngIf="loginStatus() === 'error'" class="text-danger">
+                    <p>{{ errorMessage }}</p>
+                  </div>
+                </div>
+
                 <h1>Login</h1>
                 <p class="text-body-secondary">Sign In to your account</p>
+                
+                <!-- Email Field -->
                 <c-input-group class="mb-3">
                   <span cInputGroupText>
                     <svg cIcon name="cilUser"></svg>
                   </span>
-                  <input autoComplete="username" cFormControl placeholder="Username" />
-                </c-input-group>
-                <c-input-group class="mb-4">
-                  <span cInputGroupText>
-                    <svg cIcon name="cilLockLocked"></svg>
-                  </span>
-                  <input
-                    autoComplete="current-password"
-                    cFormControl
-                    placeholder="Password"
-                    type="password"
+                  <input 
+                   formControlName="email"
+                    name="email"
+                    autoComplete="username" 
+                    cFormControl 
+                    placeholder="Email" 
+                    type="email"
+                    required
                   />
                 </c-input-group>
+                <!-- Email Error -->
+                <div *ngIf="email.invalid && (email.touched || email.dirty)" class="text-danger small mb-2">
+                  <small>Please enter a valid email address</small>
+                </div>
+                
+                <!-- Password Field -->
+               <!-- Password Field -->
+<div class="mb-3">
+  <c-input-group>
+    <span cInputGroupText>
+      <svg cIcon name="cilLockLocked"></svg>
+    </span>
+    <input
+      formControlName="password"
+      name="password"
+      #passwordInput
+      autoComplete="current-password"
+      cFormControl
+      placeholder="Password"
+      [type]="showPassword ? 'text' : 'password'"
+      required
+    />
+    <span cInputGroupText class="password-toggle">
+      <button type="button" class="btn btn-link p-0 border-0"
+        (click)="togglePasswordVisibility(passwordInput)">
+        <mat-icon class="text-body">{{ showPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+      </button>
+    </span>
+  </c-input-group>
+  <!-- Password Error -->
+  <div *ngIf="password.invalid && (password.touched || password.dirty)" class="text-danger small mt-1">
+    <small>Password must be at least 8 characters</small>
+  </div>
+</div>
+
                 <div class="form-check mb-3">
-                  <input class="form-check-input" type="checkbox" id="adminCheck">
+                  <input formControlName="adminRole" class="form-check-input" value="admin" type="checkbox" id="adminCheck">
                   <label class="form-check-label" for="adminCheck">
                     As Admin
                   </label>
                 </div>
                 <c-row>
                   <c-col xs="6">
-                    <button cButton class="px-4" color="primary">
-                      Login
+                    <button 
+                      cButton 
+                      class="px-4" 
+                      color="primary" 
+                      type="submit"
+                      [disabled]="!isEmailValid || !isPasswordValid">
+                      <span *ngIf="loginStatus() !== 'loading'">Login</span>
+                      <span *ngIf="loginStatus() === 'loading'">
+                        <svg cIcon name="cilLoopCircular" class="spin"></svg> Loading...
+                      </span>
                     </button>
                   </c-col>
                   <c-col class="text-end" xs="6">

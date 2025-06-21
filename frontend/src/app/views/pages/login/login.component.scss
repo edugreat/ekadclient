@@ -1,0 +1,74 @@
+/* Animation for the success icon */
+.animate__animated {
+    animation-duration: 1s;
+  }
+  
+  .animate__bounceIn {
+    animation-name: bounceIn;
+  }
+  
+  @keyframes bounceIn {
+    from, 20%, 40%, 60%, 80%, to {
+      animation-timing-function: cubic-bezier(0.215, 0.610, 0.355, 1.000);
+    }
+  
+    0% {
+      opacity: 0;
+      transform: scale3d(.3, .3, .3);
+    }
+  
+    20% {
+      transform: scale3d(1.1, 1.1, 1.1);
+    }
+  
+    40% {
+      transform: scale3d(.9, .9, .9);
+    }
+  
+    60% {
+      opacity: 1;
+      transform: scale3d(1.03, 1.03, 1.03);
+    }
+  
+    80% {
+      transform: scale3d(.97, .97, .97);
+    }
+  
+    to {
+      opacity: 1;
+      transform: scale3d(1, 1, 1);
+    }
+  }
+  
+  /* Loading spinner */
+  .spin {
+    animation: spin 1s linear infinite;
+  }
+  
+  @keyframes spin {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  .password-toggle {
+    cursor: pointer;
+    background-color: transparent;
+    border-left: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.05);
+    }
+  
+    .mat-icon {
+      font-size: 1.25rem;
+      width: auto;
+      height: auto;
+    }
+  }

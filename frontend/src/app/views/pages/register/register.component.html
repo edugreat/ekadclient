@@ -4,6 +4,17 @@
       <c-col lg="7" md="9" xl="6">
         <c-card class="mx-4">
           <c-card-body class="p-4">
+
+
+              <!-- Country Dropdown -->
+              <div class="mb-3">
+                <label for="country" class="form-label">Country of Origin</label>
+                <select [(ngModel)]="selectedCountry" id="country" class="form-select">
+                  <option value="" disabled selected>Select your country</option>
+                  <option *ngFor="let country of countries" [value]="country">{{country}}</option>
+                </select>
+              </div>
+
             <form cForm [formGroup]="registerForm" (ngSubmit)="onSubmit()">
               <div class="d-flex justify-content-between align-items-center mb-3">
                 <h1 class="mb-0">Register</h1>
