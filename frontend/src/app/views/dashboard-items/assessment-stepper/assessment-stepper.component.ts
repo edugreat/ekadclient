@@ -34,8 +34,8 @@ export class AssessmentStepperComponent {
   
   steps = [
     { label: 'Upload', icon: 'cilCloudUpload', completed: false },
-    { label: 'Instructions', icon: 'cilDescription', completed: false },
-    { label: 'Notifications', icon: 'cilBell', completed: false },
+    { label: 'Guides', icon: 'cilDescription', completed: false },
+    { label: 'Notify', icon: 'cilBell', completed: false },
     { label: 'Done', icon: 'cilCheckCircle', completed: false }
   ];
 }

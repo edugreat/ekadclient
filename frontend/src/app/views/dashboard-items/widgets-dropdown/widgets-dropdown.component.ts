@@ -6,6 +6,9 @@ import { RouterLink } from '@angular/router';
 import { IconDirective } from '@coreui/icons-angular';
 import {
   ButtonDirective,
+  
+  RowComponent,
+
   ColComponent,
   DropdownComponent,
   DropdownDividerDirective,
@@ -23,7 +26,7 @@ import {
   imports: [ColComponent, WidgetStatAComponent, TemplateIdDirective, IconDirective, 
             DropdownComponent, ButtonDirective, DropdownToggleDirective, 
             DropdownMenuDirective, DropdownItemDirective, RouterLink, 
-            DropdownDividerDirective, ChartjsComponent]
+            DropdownDividerDirective, ChartjsComponent,  ColComponent, RowComponent]
 })
 export class WidgetsDropdownComponent implements OnInit, AfterContentInit {
   private changeDetectorRef = inject(ChangeDetectorRef);
@@ -31,8 +34,8 @@ export class WidgetsDropdownComponent implements OnInit, AfterContentInit {
   data: any[] = [];
   options: any[] = [];
   
-  // Changed labels to represent academic weeks
-  //labels = ['Week 1', 'Week 2', 'Week 3', 'Week 4', 'Week 5', 'Week 6', 'Week 7'];
+  // Labels that represent tasks to perform(task that require notifying the student once completed)
+  labels = ['upload content','post instructions','send notifications','you are done'];
   
   // Updated dataset to represent assignment completion trends
   datasets = [
@@ -79,7 +82,7 @@ export class WidgetsDropdownComponent implements OnInit, AfterContentInit {
 
   setData() {
     this.data[0] = {
-     // labels: this.labels,
+      labels: this.labels,
       datasets: this.datasets
     };
     this.setOptions();

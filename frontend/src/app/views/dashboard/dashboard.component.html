@@ -1,4 +1,15 @@
-<app-widgets-dropdown />
-
-<app-assessment-stepper/>
-<router-outlet></router-outlet>
+<!-- dashboard.component.html -->
+<c-row class="mb-4">
+    <c-col xs="12" md="12" lg="12">
+      <app-widgets-dropdown />
+    </c-col>
+  </c-row>
+  
+  <c-row>
+    <c-col xs="12" md="3" lg="3">
+      <app-assessment-stepper/>
+    </c-col>
+    <c-col xs="12" md="9" lg="9">
+      <router-outlet></router-outlet>
+    </c-col>
+  </c-row>
