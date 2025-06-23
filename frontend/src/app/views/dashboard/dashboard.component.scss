@@ -1,7 +1,32 @@
 :host {
-  .legend {
-    small {
-      font-size: x-small;
-    }
+  display: block;
+  padding: 0 1rem;
+}
+
+/* Stepper container */
+app-assessment-stepper {
+  width: 100%;
+  max-width: 250px; /* Fixed width for better readability */
+}
+
+/* Ensure proper spacing between rows */
+c-row + c-row {
+  margin-top: 1.5rem;
+}
+
+/* Main content area styling */
+c-col[xs="12"][md="9"][lg="10"] {
+  padding-right: 2rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  app-assessment-stepper {
+    max-width: 100%;
+    margin-bottom: 1rem;
+  }
+  
+  c-col[xs="12"][md="9"][lg="10"] {
+    padding-right: 1rem;
   }
 }

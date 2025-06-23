@@ -1,0 +1,49 @@
+<c-card>
+    <c-card-body>
+      <mat-stepper [disableRipple]="true" orientation="vertical" [linear]="false" #stepper>
+        <!-- Upload Step -->
+        <mat-step [editable]="false" [completed]="steps[0].completed" [label]="steps[0].label">
+          <ng-template matStepLabel>
+            <div class="step-header">
+              <svg cIcon [cIcon]="fallBackIcons.cilCloudUpload" class="step-icon"></svg>
+              <span><small>{{ steps[0].label }}</small></span>
+            </div>
+          </ng-template>
+        
+        </mat-step>
+  
+        <!-- Instructions Step -->
+        <mat-step [completed]="steps[1].completed" [label]="steps[1].label">
+          <ng-template matStepLabel>
+            <div class="step-header">
+              <svg cIcon [name]="steps[1].icon" class="step-icon"></svg>
+              <span><small>{{ steps[1].label }}</small></span>
+            </div>
+          </ng-template>
+         
+        </mat-step>
+  
+        <!-- Notifications Step -->
+        <mat-step [completed]="steps[2].completed" [label]="steps[2].label">
+          <ng-template matStepLabel>
+            <div class="step-header">
+              <svg cIcon [name]="steps[2].icon" class="step-icon"></svg>
+              <span><small>{{ steps[2].label }}</small></span>
+            </div>
+          </ng-template>
+         
+        </mat-step>
+  
+        <!-- Done Step -->
+        <mat-step [completed]="steps[3].completed" [label]="steps[3].label">
+          <ng-template matStepLabel>
+            <div class="step-header">
+              <svg cIcon [cIcon]="fallBackIcons.cilCheck" class="step-icon"></svg>
+              <span><small>{{ steps[3].label }}</small></span>
+            </div>
+          </ng-template>
+        
+        </mat-step>
+      </mat-stepper>
+    </c-card-body>
+  </c-card>
