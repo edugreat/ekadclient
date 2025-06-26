@@ -1,0 +1,99 @@
+<div *ngIf="newNotification" class="notification-container">
+    <c-card class="mb-4">
+      <c-card-header class="card-header">
+        <div class="d-flex align-items-center">
+          <svg cIcon name="cilBell" class="me-2"></svg>
+          <h5 class="mb-0">Notification Dashboard</h5>
+        </div>
+      </c-card-header>
+      
+      <c-card-body>
+        <form cForm [formGroup]="notificationForm!">
+          <!-- Message Section -->
+          <div class="form-section mb-4">
+            <div class="d-flex align-items-center mb-3">
+              <svg cIcon name="cilEnvelopeOpen" class="me-2"></svg>
+              <h6 class="mb-0">Message</h6>
+            </div>
+            
+            <input 
+              cFormControl
+              type="text"
+              formControlName="message"
+              
+              placeholder="Notification message">
+          </div>
+          
+          <!-- Audience Section -->
+          <div class="form-section">
+            <div class="d-flex align-items-center mb-3">
+              <svg cIcon name="cilPeople" class="me-2"></svg>
+              <h6 class="mb-0">Audience</h6>
+            </div>
+            
+            <textarea 
+              cFormControl
+              appNumeric
+              
+              formControlName="audience"
+              rows="2"
+              placeholder="Enter numbers separated by spaces"
+              (click)="isCheckBoxJustClicked = false"></textarea>
+            
+            <div class="audience-options mt-3">
+              <!-- All Students Checkbox -->
+              <div *ngIf="isAdmin" class="mb-3">
+                <c-form-check>
+                  <input #audienceCheck
+                    cFormCheckInput 
+                    type="checkbox" 
+                    id="allStudents"
+                    [disabled]="disableFields"
+                    (change)="processCheckedBtn($event)"
+                    (click)="isCheckBoxJustClicked = true">
+                  <label cFormCheckLabel for="allStudents">All Students</label>
+                </c-form-check>
+              </div>
+              
+              <!-- Institution Select -->
+              <div>
+                <label cLabel for="institutionSelect">My Institution</label>
+                <select #institutionSelect
+                  cFormSelect
+                  id="institutionSelect"
+                  [disabled]="disableFields"
+                  [(ngModel)]="selectedInstitution"
+                  [ngModelOptions]="{standalone: true}"
+                  (click)="isCheckBoxJustClicked = false">
+                  <option [ngValue]="undefined">Select Institution</option>
+                  <option 
+                    *ngFor="let institution of myInstitutions" 
+                    [ngValue]="institution.id"
+                    (click)="processInstitutionChangeEvent()">
+                    {{institution.name}}
+                  </option>
+                </select>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Submit Button -->
+          <div class="d-flex justify-content-end mt-4">
+            <button 
+              cButton 
+              color="primary" 
+              [disabled]="!canSubmit() || disableFields" 
+              (click)="notify()">
+             <span *ngIf="busyState() ==='nil'" >
+              <svg cIcon name="cilSend" class="me-1"></svg> Notify
+             </span>
+
+             <span  *ngIf="busyState() === 'busy'">
+              <svg class="spin" cIcon name = 'cilLoopCircular'></svg> wait...
+             </span>
+            </button>
+          </div>
+        </form>
+      </c-card-body>
+    </c-card>
+  </div>

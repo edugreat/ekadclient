@@ -22,6 +22,8 @@ export class AuthService {
 
   public userName$ = this.currentUsernameSubject.asObservable();
 
+  private currentUser?:User;
+
   // This flag is used to stop anyother requests from proceeding while refresh token process is ongoing, until it completes
   private _refreshTokenInProcess = false;
 
@@ -34,6 +36,7 @@ export class AuthService {
     ).pipe(tap(user => {
       this.loggedInUserSubject.next(user);
       this.saveToSessionStorage(user);
+      this.currentUser = user;
       this.currentUsernameSubject.next(`${user.firstName}`);
     }))
 
@@ -50,6 +53,7 @@ export class AuthService {
        return;
       }
 
+      this.currentUser = user;
       this.saveToSessionStorage(user);
       this.loggedInUserSubject.next(user);
       this.currentUsernameSubject.next(`${user.firstName}`);
@@ -65,17 +69,19 @@ export class AuthService {
     return this.http.post<void>(this.apiEndpoints.auth.disconnect, {
       headers:{id:cachedKey}
     }).pipe(tap(() => {
-      this.postLogoutRest();
+      this.postLogoutResets();
     }));
    }
 
    return of(undefined).pipe(tap(() => {
-    this.postLogoutRest();
+    this.postLogoutResets();
    }))
 
   }
 
-  private postLogoutRest() {
+  private postLogoutResets() {
+
+    this.currentUser = undefined;
     sessionStorage.clear();
     this.loggedInUserSubject.next(undefined);
     this.groupJoinDateSubject.next(undefined);
@@ -116,6 +122,16 @@ export class AuthService {
 
 }
 
+public get isSuperAdmin(){
+
+  return this.currentUser ? this.currentUser.roles.map(r => r.toLowerCase()).includes('superadmin') : false;
+}
+
+ get isAdmin(){
+
+  return this.currentUser ? this.currentUser.roles.map(r => r.toLowerCase()).includes('admin') : false;;
+}
+
 private groupJoinedDate(userId:number):Observable<Map<number, Date>>{
   return this.http.get<Map<number, Date>>(`${this.apiEndpoints.chat.groupJoinDate}?id=${userId}`)
   .pipe(tap(joinDate => {
@@ -140,6 +156,8 @@ public set refreshTokenInProcess(inProcess:boolean){
     return user.roles.includes('Student');
 
   }
+
+  
 }
 
 export interface User{

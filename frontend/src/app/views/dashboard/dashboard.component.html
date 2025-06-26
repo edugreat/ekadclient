@@ -1,15 +1,21 @@
 <!-- dashboard.component.html -->
-<c-row class="mb-4">
+<div class="dashboard-container">
+  <c-row class="mb-4 fixed-widget-row">
     <c-col xs="12" md="12" lg="12">
-      <app-widgets-dropdown />
+      <app-widgets-dropdown class="fixed-widget" />
     </c-col>
   </c-row>
   
-  <c-row>
-    <c-col xs="12" md="3" lg="3">
-      <app-assessment-stepper/>
+  <c-row class="main-content-row">
+    <c-col xs="12" md="2" lg="2" class="fixed-stepper-col">
+      <div class="stepper-div fixed-stepper">
+        <app-assessment-stepper/>
+      </div>
     </c-col>
-    <c-col xs="12" md="9" lg="9">
-      <router-outlet></router-outlet>
+    <c-col xs="12" md="10" lg="10" class="scrollable-content-col">
+      <div class="content-wrapper">
+        <router-outlet></router-outlet>
+      </div>
     </c-col>
   </c-row>
+</div>

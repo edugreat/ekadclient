@@ -1,6 +1,6 @@
 <c-card class="h-100">
   <c-card-body class="h-100 p-2"> <!-- Added p-2 for padding -->
-    <mat-stepper [disableRipple]="true" orientation="vertical" [linear]="false" #stepper>
+    <mat-stepper [disableRipple]="true" orientation="vertical" [linear]="false" #taskCompletionStepper>
       <!-- Upload Step -->
       <mat-step [editable]="false" [completed]="steps[0].completed" [label]="steps[0].label">
         <ng-template matStepLabel>

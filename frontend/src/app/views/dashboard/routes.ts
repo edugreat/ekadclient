@@ -18,7 +18,7 @@ export const routes: Routes = [
      
       {
         path: 'assessment',
-        loadComponent: () => import('../assessment-upload/assessment-upload.component').then(m => m.AssessmentUploadComponent),
+        loadComponent: () => import('../test-upload/test-upload.component').then(m => m.UploadTestComponent),
         data: {
           title: 'assessment upload'
         }

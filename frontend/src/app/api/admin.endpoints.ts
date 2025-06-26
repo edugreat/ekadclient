@@ -34,4 +34,6 @@ export class AdminEndpoints {
    readonly register = `${this.baseUrl}/admins/register`;
    readonly registerStudent = `${this.baseUrl}/admins/register_student`;
    readonly institutions = `${this.baseUrl}/admins/institutions`;
+   readonly disable = `${this.baseUrl}/admins/disable`
+   readonly enable = `${this.baseUrl}/admins/enable`
 }

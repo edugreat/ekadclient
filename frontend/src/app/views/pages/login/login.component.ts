@@ -1,6 +1,6 @@
 import { Component, inject, OnInit, signal, WritableSignal } from '@angular/core';
 import { CommonModule, NgStyle } from '@angular/common';
-import {  AbstractControl, FormBuilder, FormControl, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms'; // Add this import
+import {  AbstractControl, FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms'; // Add this import
 import { IconDirective, IconSetService,  } from '@coreui/icons-angular';
 
 import { 
@@ -59,6 +59,8 @@ export class LoginComponent implements OnInit {
 
   errorMessage: string = '';
   showPassword = false;
+  // flag to disable logon button once login has been initiated to prevent repeated login
+  disableOnLogin = signal(false);
   
   iconSet = inject(IconSetService);
   private fb = inject(FormBuilder);
@@ -93,6 +95,8 @@ export class LoginComponent implements OnInit {
   
   login() {
     this.loginStatus.set('loading');
+    this.disableOnLogin.set(true);
+
 
     return this.authService.login(this.email.value, this.password.value, this.isAdmin ? 'Admin' : 'Student').subscribe({
       next:(user) => {
@@ -104,11 +108,13 @@ export class LoginComponent implements OnInit {
       error:(err) => {
         this.loginStatus.set('error');
         this.errorMessage = err.error
+        this.disableOnLogin.set(false);
       },
 
       complete:() => setTimeout(() => {
+       
         this.router.navigate(['/dashboard'])
-      }, 10000)
+      }, 1000)
     })
 
 

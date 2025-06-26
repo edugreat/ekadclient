@@ -1,0 +1,206 @@
+<div *ngIf="preview && !hasUploaded(); else instructions"  class="preview-test-container">
+    <c-card class="mb-4 card">
+      <c-card-header class="card-header">
+        <strong>Test Preview</strong>
+        <span class="text-body-secondary small">Please preview before uploading</span>
+      </c-card-header>
+      <c-card-body>
+        <form cForm [formGroup]="testForm!">
+          <!-- Basic Information Section -->
+          <div class="mb-4 p-3 border rounded form-section">
+            <h5 class="mb-3">
+              <svg cIcon name="cilInfo"></svg> Basic Information
+            </h5>
+            
+            <c-row [gutter]="3" class="mb-3">
+              <c-col md="6">
+                <label cLabel for="category">Category</label>
+                <input 
+                  cFormControl 
+                  id="category" 
+                  type="text" 
+                  formControlName="category"
+                  
+                  placeholder="Test category">
+              </c-col>
+              
+              <c-col md="6">
+                <label cLabel for="subject">Subject</label>
+                <input 
+                  cFormControl 
+                  id="subject" 
+                  type="text" 
+                  formControlName="subjectName"
+                  
+                  placeholder="Subject name">
+              </c-col>
+            </c-row>
+            
+            <c-row [gutter]="3" class="mb-3">
+              <c-col md="8">
+                <label cLabel for="title">Title</label>
+                <input 
+                  cFormControl 
+                  id="title" 
+                  type="text" 
+                  formControlName="testName"
+                  
+                  placeholder="Test title">
+              </c-col>
+              
+              <c-col md="4">
+                <label cLabel for="duration">Duration (mins)</label>
+                <input 
+                  cFormControl 
+                  id="duration" 
+                  type="text" 
+                  formControlName="duration"
+                  
+                  placeholder="Duration">
+              </c-col>
+            </c-row>
+          </div>
+  
+          <!-- Questions Section -->
+          <div class="mb-4 p-3 border rounded form-section" formArrayName="questions">
+            <h5 class="mb-3">
+              <svg cIcon name="cilList"></svg> Questions
+            </h5>
+            
+            <div [formGroup]="paginatedQuestion!">
+              <c-row [gutter]="3" class="mb-3">
+                <c-col md="2">
+                  <label cLabel>Question #</label>
+                  <input 
+                    cFormControl 
+                    type="text" 
+                    formControlName="questionNumber"
+                    >
+                </c-col>
+                
+                <c-col md="10">
+                  <label cLabel>Question Text</label>
+                  <textarea 
+                    cFormControl 
+                    formControlName="question"
+                    
+                    rows="2"></textarea>
+                </c-col>
+              </c-row>
+              
+              <c-row [gutter]="3" class="mb-3">
+                <c-col md="12">
+                  <label cLabel>Correct Answer</label>
+                  <select 
+                    cFormSelect 
+                    formControlName="answer"
+                    >
+                    <option [value]="paginatedQuestion?.get('answer')?.value">
+                      {{ paginatedQuestion?.get('answer')?.value || 'Select Answer' }}
+                    </option>
+                    <option *ngFor="let answer of ['A', 'B', 'C', 'D', 'E']" [value]="answer">
+                      {{ answer }}
+                    </option>
+                  </select>
+                </c-col>
+              </c-row>
+  
+              <!-- Options Section -->
+              <h5 class="mb-3">
+                <svg cIcon name="cilListRich"></svg> Options
+              </h5>
+              
+              <div class="options" formArrayName="options">
+                <div *ngFor="let option of getOptionsArrayFor(currentPageIndex).controls; let j = index" [formGroupName]="j">
+                  <c-row [gutter]="3" class="mb-3">
+                    <c-col md="2">
+                      <select 
+                        cFormSelect 
+                        formControlName="letter"
+                        >
+                        <option [value]="option.get('letter')?.value">
+                          {{ option.get('letter')?.value }}
+                        </option>
+                        <option *ngFor="let _option of optionsContainer![j]" [value]="_option">
+                          {{_option}}
+                        </option>
+                      </select>
+                    </c-col>
+                    
+                    <c-col md="8">
+                      <input 
+                        cFormControl 
+                        type="text" 
+                        formControlName="text"
+                        
+                        placeholder="Option text">
+                    </c-col>
+                  </c-row>
+                </div>
+              </div>
+              
+              <div class="d-flex justify-content-end mt-3 edit-actions">
+                <button 
+                  cButton 
+                  color="primary" 
+                  *ngIf="!editMode()" 
+                  (click)="edit()">
+                  <svg cIcon name="cilPencil"></svg> Edit
+                </button>
+                
+                <button 
+                  cButton 
+                  color="success" 
+                  *ngIf="editMode()" 
+                  [disabled]="hasError()"
+                  (click)="saveChanges()">
+                  <svg cIcon name="cilSave"></svg> Save Changes
+                </button>
+              </div>
+            </div>
+          </div>
+  
+          <!-- Pagination Controls -->
+          <div class="d-flex justify-content-between align-items-center mt-4 pagination-controls">
+            <c-pagination aria-label="Question navigation">
+              <c-page-item [disabled]="currentPageIndex === 0 || editMode()">
+                <a cPageLink (click)="previousPage()">
+                  <span aria-hidden="true">&laquo;</span>
+                </a>
+              </c-page-item>
+              
+              <c-page-item [active]="true">
+                <span>Question {{ currentPageIndex + 1 }} of {{ totalPageIndex }}</span>
+              </c-page-item>
+              
+              <c-page-item [disabled]="(currentPageIndex + 1) === totalPageIndex || editMode()">
+                <a cPageLink (click)="nextPage()">
+                  <span aria-hidden="true">&raquo;</span>
+                </a>
+              </c-page-item>
+            </c-pagination>
+            
+            <button 
+              cButton 
+              color="primary" 
+              [disabled]="(totalPageIndex - currentPageIndex) > 1 || editMode() || hasError()"
+              (click)="uploadNow()">
+             <span *ngIf="uploadingStatus() === 'nil'" >
+              <svg cIcon name="cilCloudUpload"></svg> Upload Now
+             </span>
+
+              <span *ngIf="uploadingStatus() === 'busy'">
+                <svg class="spin" cIcon name="cilLoopCircular" ></svg> sending...
+              </span>
+            </button>
+          </div>
+        </form>
+      </c-card-body>
+    </c-card>
+  </div>
+  
+  <!-- Instructions Template -->
+  <ng-template #instructions>
+    <app-instructions [uploadedAssessmentId]="uploadedAssessmentId"></app-instructions>
+     
+  </ng-template>

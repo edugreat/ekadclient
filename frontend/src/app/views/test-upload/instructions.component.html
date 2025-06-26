@@ -1,0 +1,75 @@
+<div *ngIf="hasUploadedInstructions(); else notYet">
+    <app-notifications [eventId]="uploadedAssessmentId" [typeOfTask]="taskType"></app-notifications>
+  </div>
+  
+  <ng-template #notYet>
+    <c-card class="mb-4 card">
+      <c-card-header class="card-header">
+        <div class="d-flex align-items-center">
+          <svg cIcon name="cilTask" class="me-2"></svg>
+          <h5 class="mb-0">Assessment Instructions</h5>
+        </div>
+        <span class="text-body-secondary small">Please provide instructions for students taking this assessment</span>
+      </c-card-header>
+      
+      <c-card-body>
+        <form cForm [formGroup]="instructionForm!">
+          <div class="form-section" formArrayName="instructions">
+            <div *ngFor="let instruction of formArray.controls; let i = index" class="mb-3 instruction-item">
+              <c-row [gutter]="3" class="align-items-center">
+                <c-col xs="1" class="text-end">
+                  <label cLabel [for]="'instruction-'+i">{{i+1}}.</label>
+                </c-col>
+                
+                <c-col xs="10">
+                  <textarea 
+                    cFormControl
+                    [id]="'instruction-'+i"
+                    [formControlName]="i"
+                    rows="2"
+                    placeholder="Enter instruction"></textarea>
+                </c-col>
+                
+                <c-col xs="1" class="text-start">
+                  <button 
+                    cButton 
+                    color="danger" 
+                    variant="outline" 
+                    size="sm" 
+                    (click)="deletInstruction(i)"
+                    title="Delete instruction">
+                    <svg cIcon name="cilTrash"></svg>
+                  </button>
+                </c-col>
+              </c-row>
+            </div>
+            
+            <div class="d-flex justify-content-between mt-4">
+              <button 
+                cButton 
+                color="primary" 
+                variant="outline" 
+                (click)="addInstruction()"
+                title="Add more instructions">
+                <svg cIcon name="cilPlus" class="me-1"></svg> Add Instruction
+              </button>
+              
+              <button 
+                cButton 
+                color="success" 
+                [disabled]="hasError"
+                (click)="upload()">
+               <span *ngIf="busyState() === 'nil'">
+                <svg cIcon name="cilCloudUpload" class="me-1"></svg> Upload Instructions
+               </span>
+
+               <span *ngIf="busyState() === 'busy'">
+                <svg class="spin" cIcon name ="cilLoopCircular"></svg>wait...
+               </span>
+              </button>
+            </div>
+          </div>
+        </form>
+      </c-card-body>
+    </c-card>
+  </ng-template>

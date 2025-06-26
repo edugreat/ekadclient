@@ -1,0 +1,259 @@
+<div class="test-upload-container" *ngIf="!previewTest;else prevTest" >
+    <div cCard>
+      <div cCardHeader class="bg-primary text-white">
+        <strong class="form-name">Test Upload Form</strong>
+        <svg cIcon [name]="'cilCloudUpload'" class="float-end"></svg>
+      </div>
+      <div cCardBody class="d-flex flex-column align-items-center">
+        <!-- Institution Info (Added back from original) -->
+        <div *ngIf="(studentPopulation) && (isSuperAdmin || myInstitutions.length)" class="mb-4">
+          <div *ngIf="myInstitutions.length" class="institution-info p-3 bg-light rounded">
+            <span>Assessment for <b>{{selectedInstitution?.name}}</b> students</span>
+          </div>
+          
+          <div *ngIf="myInstitutions.length > 1" class="mt-3">
+            <h5>Select your institution</h5>
+            <mat-form-field appearance="outline">
+              <mat-label>Institutions</mat-label>
+              <mat-select (selectionChange)="processInstitutionChange($event)" [(ngModel)]="selectedInstitution" [ngModelOptions]="{standalone: true}">
+                <mat-option>None</mat-option>
+                <mat-option *ngFor="let inst of myInstitutions" [value]="inst">
+                  {{inst.name}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+  
+        <!-- Basic Information Form -->
+        <div class="form-section mb-4 p-3 border rounded w-80">
+          <h5 class="mb-3">
+            <svg cIcon [cIcon]="spread"></svg> Basic Information
+          </h5>
+          
+          <form cForm class="w-100" [formGroup]="testUploadForm">
+            <div cRow [gutter]="3" class="mb-3">
+              <div class="mb-3 w-100">
+                <mat-form-field appearance="outline"  class="w-100">
+                  <mat-label>Category</mat-label>
+                  <mat-select formControlName="category" class="w-100">
+                    <mat-option>Select Category</mat-option>
+                    <mat-option *ngFor="let category of categories" [value]="category">
+                      {{category}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <div class="mb-3 w-100">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Subject</mat-label>
+                  <mat-select formControlName="subject" class="w-100">
+                    <mat-option>Select Subject</mat-option>
+                    <mat-option *ngFor="let subject of subjectNames" [value]="subject">
+                      {{subject}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+            
+            <div cRow [gutter]="3" class="mb-3 w-100">
+              <div cCol md="8">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Test Title</mat-label>
+                  <input matInput placeholder="Enter test title" formControlName="title" class="w-100">
+                </mat-form-field>
+              </div>
+              <div class="mb-3 w-100">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Duration (mins)</mat-label>
+                  <mat-select formControlName="duration" class="w-100">
+                    <mat-option>Select Duration</mat-option>
+                    <mat-option *ngFor="let duration of durations" [value]="duration">
+                      {{duration}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+            
+            <div cRow [gutter]="3" *ngIf="myInstitutions.length > 0 && !isSuperAdmin" class="mb-3">
+              <div cCol md="12">
+                <mat-form-field appearance="outline">
+                  <mat-label>Institution</mat-label>
+                  <mat-select (selectionChange)="processInstitutionChange($event)" [(ngModel)]="selectedInstitution" [ngModelOptions]="{standalone: true}">
+                    <mat-option>Select Institution</mat-option>
+                    <mat-option *ngFor="let institution of myInstitutions" [value]="institution">
+                      {{institution.name}} ({{institution.studentPopulation}} students)
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+          </form>
+        </div>
+  
+        <!-- Questions Form -->
+      <div class="form-section mb-4 p-3 border rounded w-80">
+        <h5 class="mb-3">
+          <svg cIcon [cIcon]="task"></svg> Questions
+        </h5>
+        
+        <form cForm [formGroup]="questionForm"  class="w-100">
+          <div cRow [gutter]="3" class="mb-3 w-100">
+            <div cCol md="9">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Total Questions</mat-label>
+                <input matInput class="w-100" placeholder="Number of questions" formControlName="total" [readonly]="!nonEditable" appNumeric>
+              </mat-form-field>
+            </div>
+            
+            <!--  Add/Edit button -->
+            <div cCol md="3" class="d-flex align-items-end">
+              <button cButton 
+                color="primary" 
+                type="button" 
+                (click)="addOrEdit()"
+                [disabled]="nonEditable ?  disableAddOrEditBtn : false"
+                matTooltip="{{nonEditable ? 'Add number of questions' : 'Edit number of questions'}}">
+                @if(nonEditable){
+                  <svg cIcon [cIcon]="plus"></svg>
+                }
+                @if(!nonEditable){
+                  <svg cIcon [cIcon]="plus"></svg>
+                }
+                {{nonEditable ? 'Add' : 'Edit'}}
+              </button>
+            </div>
+            
+            <div class="mb-3 w-100" *ngIf="numberRange && numberRange.length > 0">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Question #</mat-label>
+                <mat-select formControlName="index" class="w-100">
+                  <mat-option>Select Question</mat-option>
+                  <mat-option *ngFor="let num of numberRange" [value]="num">
+                    {{num}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            
+            <div class="mb-3 w-100" *ngIf="questionForm.get('index')?.value">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Question Text</mat-label>
+                <textarea matInput placeholder="Enter the question"
+                class="w-100"
+                formControlName="question" rows="2"></textarea>
+              </mat-form-field>
+            </div>
+          </div>
+          
+          <div class="mb-3 w-100" [gutter]="3" *ngIf="questionForm.get('question')?.value" class="mb-3">
+            <div cCol md="6">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Correct Answer</mat-label>
+                <mat-select formControlName="answer" class="w-100">
+                  <mat-option>Select Correct Answer</mat-option>
+                  <mat-option *ngFor="let answer of answers" [value]="answer">
+                    {{answer}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <!-- Options Form -->
+      <div  class="form-section mb-4 p-3 border rounded w-80" *ngIf="questionForm.get('answer')?.value">
+        <h5 class="mb-3">
+          <svg cIcon [name]="'cilListRich'"></svg> Options
+        </h5>
+        
+        <form cForm [formGroup]="optionForm" class="w-100">
+          <div cRow [gutter]="3" class="w-100">
+            <div cCol md="2" class="w-100">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Option</mat-label>
+                <mat-select formControlName="letter" class="w-100">
+                  <mat-option>Select Letter</mat-option>
+                  <mat-option *ngFor="let option of options" [value]="option">
+                    {{option}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div cCol md="8"  class="w-100">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Option Text</mat-label>
+                <input matInput placeholder="Enter option text" formControlName="text" class="w-100">
+              </mat-form-field>
+            </div>
+            <div cCol md="2" class="d-flex align-items-end w-100">
+              <button cButton 
+                color="success" 
+                type="button" 
+                (click)="processAddition()" 
+                [disabled]="!optionForm.valid || (optionForm.get('text')?.value === undefined || !optionForm.get('text')?.value?.length)"
+                class="w-100"
+                matTooltip="Add current option">
+                <svg cIcon [name]="'cilPlus'"></svg> Add
+              </button>
+            </div>
+          </div>
+        </form>
+        
+        <div *ngIf="testDTO && testDTO.questions.length > 0" class="mt-4">
+          <h6>Added Questions:</h6>
+          <div class="list-group">
+            <div class="list-group-item" *ngFor="let question of testDTO!.questions">
+              <strong>Q{{question.questionNumber}}:</strong> {{question.question}}
+              <div cBadge color="success" class="float-end">
+                Options: {{question.options.length}}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Preview Button -->
+      <div class="text-center mt-4 w-80">
+        <button cButton 
+          color="primary" 
+          (click)="preview()" 
+          class="w-100"
+          [disabled]="!taskCompleted()"
+          matTooltip="Preview Now">
+          <svg cIcon [name]="'cilMagnifyingGlass'"></svg> 
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- No Institutions Template -->
+<ng-template #noInstitutions>
+  <div class="no-institutions p-4 text-center">
+    <h3>Sorry, but some information is missing.</h3>
+    <div class="mt-3">
+      <button cButton 
+        color="primary" 
+        [routerLink]="['/add_student', adminId]" 
+        routerLinkActive="router-link-active" 
+        class="me-2">
+        Add your students
+      </button>
+      <button cButton 
+        color="primary" 
+        [routerLink]="['/register']" 
+        routerLinkActive="router-link-active">
+        Register your institution
+      </button>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #prevTest>
+<app-preview-test [preview]="testDTO"></app-preview-test>
+
+</ng-template>

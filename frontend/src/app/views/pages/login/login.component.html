@@ -83,7 +83,7 @@
                       class="px-4" 
                       color="primary" 
                       type="submit"
-                      [disabled]="!isEmailValid || !isPasswordValid">
+                      [disabled]="!isEmailValid || !isPasswordValid || disableOnLogin()">
                       <span *ngIf="loginStatus() !== 'loading'">Login</span>
                       <span *ngIf="loginStatus() === 'loading'">
                         <svg cIcon name="cilLoopCircular" class="spin"></svg> Loading...
