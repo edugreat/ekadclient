@@ -1,0 +1,109 @@
+<c-card class="subject-upload-container">
+    <c-card-header>
+      <div class="d-flex align-items-center">
+        <svg cIcon [cIcon]="cilBook" class="me-2"></svg>
+        <h5 class="mb-0">Subject Management</h5>
+      </div>
+    </c-card-header>
+  
+    <c-card-body>
+      <form cForm [formGroup]="subjectForm" (ngSubmit)="onSubmit()">
+        <!-- ID Field (Read-only) -->
+        <c-row  class="mb-3">
+          <c-col xs="12" md="4">
+            <label cLabel for="subjectId">Subject ID</label>
+            <input 
+              cFormControl 
+              id="subjectId" 
+              type="text" 
+              formControlName="id"
+              readonly>
+          </c-col>
+        </c-row>
+  
+        <!-- Category Selection -->
+        <c-row class="mb-3">
+          <c-col xs="12" md="6">
+            <label cLabel for="category">Category</label>
+            <select class="input-group"
+              cFormSelect 
+              id="category" 
+              formControlName="category"
+              (change)="onCategoryChange()">
+              <option value="">Select a category</option>
+              <option *ngFor="let cat of categories" [value]="cat">
+                {{ cat }}
+              </option>
+            </select>
+          </c-col>
+        </c-row>
+  
+        <!-- Subject Name Input -->
+        <c-row class="mb-3">
+          <c-col xs="12" md="6">
+            <label cLabel for="subjectName">Subject Name</label>
+            <div class="input-group">
+              <input 
+                cFormControl 
+                id="subjectName" 
+                type="text" 
+                formControlName="subjectName"
+                placeholder="Enter subject name">
+              <button 
+                cButton 
+                color="primary" 
+                type="button"
+                [disabled]="disableAdd || submissionStatus() === 'busy'"
+                (click)="addSubject()">
+                <svg cIcon [cIcon]="cilPlus"></svg> Add
+              </button>
+            </div>
+          </c-col>
+        </c-row>
+  
+        <!-- Added Subjects List (Custom Implementation) -->
+        <c-row *ngIf="subjects.length > 0" class="mb-4">
+          <c-col xs="12">
+            <c-card class="subject-list-card">
+              <c-card-header>
+                <h6>Subjects for {{ subjectForm.get('category')?.value }}</h6>
+              </c-card-header>
+              <c-card-body>
+                <div class="custom-list-group">
+                  <div *ngFor="let subject of subjects; let i = index" class="custom-list-group-item">
+                    <div class="subject-name">{{ subject.subjectName }}</div>
+                    <button 
+                      cButton 
+                      color="danger" 
+                      size="sm" 
+                      variant="outline"
+                      (click)="removeSubject(i)">
+                      <svg cIcon [cIcon]="cilTrash"></svg>
+                    </button>
+                  </div>
+                </div>
+              </c-card-body>
+            </c-card>
+          </c-col>
+        </c-row>
+  
+        <!-- Submit Button -->
+        <c-row>
+          <c-col xs="12" class="text-end">
+            <button 
+              cButton 
+              color="success" 
+              type="submit"
+              [disabled]="subjects.length === 0 || disableAdd || submissionStatus() === 'busy'">
+             <span *ngIf="submissionStatus() === 'nil'">
+                <svg cIcon [cIcon]="cilCloudUpload" class="me-1"></svg> Upload Subjects
+             </span>
+             <span *ngIf="submissionStatus()==='busy'">
+                <svg cIcon [cIcon]="cilLoopCircular" class="me-1 spin"></svg> wait...
+             </span>
+            </button>
+          </c-col>
+        </c-row>
+      </form>
+    </c-card-body>
+  </c-card>

@@ -198,8 +198,7 @@ countries: string[] = [
 
   onSubmit() {
 
-    console.log('submitting')
-
+   
     
     let user: StudentRegisterationData = this.registerForm.value;
     

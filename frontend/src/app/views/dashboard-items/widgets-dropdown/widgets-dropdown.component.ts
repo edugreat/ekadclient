@@ -4,6 +4,7 @@ import { getStyle } from '@coreui/utils';
 import { ChartjsComponent } from '@coreui/angular-chartjs';
 import { RouterLink } from '@angular/router';
 import { IconDirective } from '@coreui/icons-angular';
+//import {cilBook, cilTask, cilNoteAdd} from '@coreui/icons'
 import {
   ButtonDirective,
   
@@ -18,6 +19,7 @@ import {
   TemplateIdDirective,
   WidgetStatAComponent
 } from '@coreui/angular';
+import { cilBook, cilNoteAdd, cilPlus, cilTask } from '@coreui/icons';
 
 @Component({
   selector: 'app-widgets-dropdown',
@@ -30,9 +32,20 @@ import {
 })
 export class WidgetsDropdownComponent implements OnInit, AfterContentInit {
   private changeDetectorRef = inject(ChangeDetectorRef);
+ 
 
   data: any[] = [];
   options: any[] = [];
+
+  cilBook = cilBook;
+  cilTask = cilTask;
+  cilNoteAdd = cilNoteAdd
+  cilPlus = cilPlus
+
+  constructor(){
+
+   
+  }
   
   // Labels that represent tasks to perform(task that require notifying the student once completed)
   labels = ['upload content','post instructions','send notifications','you are done'];

@@ -228,8 +228,8 @@ ngOnDestroy(): void {
        
           if(response.status  === HttpStatusCode.Ok) {
            
+            this.busyState.set('nil');
             this.adminService.setTaskMilestone(3)
-
 
           }
           

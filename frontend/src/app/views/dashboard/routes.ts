@@ -22,7 +22,14 @@ export const routes: Routes = [
         data: {
           title: 'assessment upload'
         }
-      }
+      },
+      {
+        path:'subjects',
+        loadComponent:() => import ('../subject/subject-upload.component').then(m => m.SubjectUploadComponent),
+        data:{
+          title:'add subjects'
+        }
+      },
     ]
   }
 ];

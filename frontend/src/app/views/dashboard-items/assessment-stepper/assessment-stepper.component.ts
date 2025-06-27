@@ -3,7 +3,7 @@ import { MatStepper, MatStepperModule } from '@angular/material/stepper';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { CardBodyComponent, CardComponent } from '@coreui/angular';
-import { IconDirective, IconSetService } from '@coreui/icons-angular';
+import { IconDirective } from '@coreui/icons-angular';
 import { cilCloudUpload, cilCheck } from '@coreui/icons';
 import { AdminService } from '../../../services/admin.service';
 import{toSignal} from '@angular/core/rxjs-interop'
@@ -30,6 +30,7 @@ export class AssessmentStepperComponent implements OnInit {
   @ViewChild('taskCompletionStepper')taskCompletionStepper?:MatStepper;
 
   private adminService = inject(AdminService);
+
 
   private taskCompletion = toSignal(this.adminService.taskMilestoneObs$);
 

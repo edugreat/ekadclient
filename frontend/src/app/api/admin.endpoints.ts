@@ -25,6 +25,7 @@ export class AdminEndpoints {
    readonly subjects = `${this.baseUrl}/admins/subjects`;
    readonly updateSubjectName = `${this.baseUrl}/admins/update/subject_name`;
    readonly deleteSubject = `${this.baseUrl}/admins/delete/subject`;
+   readonly uploadSubjects = `${this.baseUrl}/admins/subjects`
   
   // Category Management
    readonly updateCategory = `${this.baseUrl}/admins/update/category`;

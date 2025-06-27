@@ -13,12 +13,9 @@ import { MatLabel } from '@angular/material/form-field';
 import { MatTooltip } from '@angular/material/tooltip';
 
 import {
-  cilCloudUpload,
   cilSpreadsheet,
   cilTask,
-  cilListRich,
   cilPlus,
-  cilMagnifyingGlass,
   cilPencil
 } from '@coreui/icons';
 
@@ -29,43 +26,34 @@ import {
   FormDirective,
   GutterDirective
 } from '@coreui/angular';
-import { IconDirective, IconSetService } from '@coreui/icons-angular';
+import { IconDirective } from '@coreui/icons-angular';
 import { RouterLink } from '@angular/router';
 import { PreviewTestComponent } from './preview-test.component';
+import { DashboardStateService } from '../../services/dashboard-state.service';
 
 @Component({
   selector: 'app-test-upload',
   imports: [
     // CoreUI
     ButtonDirective,
-    //CardComponent,
-    //CardHeaderComponent,
-   // CardBodyComponent,
+    
     FormDirective,
-   // FormControlDirective,
-   // FormLabelDirective,
-   // RowComponent,
-   // ColComponent,
-   // BadgeComponent,
-  //  TextColorDirective,
+  
     GutterDirective,
     IconDirective,
 
-    // Material (keeping necessary components)
-    // Removed MatFormField as it is not used
     MatLabel,
     MatOption,
     MatInput,
-   // MatButton,
-    MatTooltip,
-   // MatIcon,
+   
+   
     MatSelect,
-
-    // Angular
+    MatTooltip,
+    
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
-    //RouterLink,
+    
     RouterLink,
 
     // Custom
@@ -84,7 +72,7 @@ export class UploadTestComponent implements OnInit, OnDestroy {
   private institutionService = inject(InstitutionService);
   private fb = inject(FormBuilder);
   private authService = inject(AuthService);
-
+  private dashboardStateService = inject(DashboardStateService)
   
   //cloud = cilCloudUpload;
   spread = cilSpreadsheet;
@@ -254,6 +242,8 @@ export class UploadTestComponent implements OnInit, OnDestroy {
   });
 
   ngOnInit(): void {
+
+    this.dashboardStateService.hideStepper = false;
 
     this._currentUser();
 

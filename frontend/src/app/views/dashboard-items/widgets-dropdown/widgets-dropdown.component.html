@@ -15,13 +15,14 @@
             <svg cIcon name="cilTask"></svg>
           </button>
           <ul cDropdownMenu>
-            <li><a [routerLink]="['/dashboard/assessment']" cDropdownItem><svg cIcon name="cilBook" class="me-2"></svg> Post Assessment</a></li>
-            <li><a [routerLink]="[]" cDropdownItem><svg cIcon name="cilFlask" class="me-2"></svg> Post Assignment</a></li>
+            <li><a [routerLink]="['/dashboard/assessment']" cDropdownItem><svg cIcon [cIcon]="cilBook" class="me-2"></svg> Post Assessment</a></li>
+            <li><a [routerLink]="[]" cDropdownItem><svg cIcon [cIcon]="cilTask" class="me-2"></svg> Post Assignment</a></li>
+            <li><a [routerLink]="['/dashboard/subjects']" cDropdownItem><svg cIcon [cIcon]="cilNoteAdd" class="me-2"></svg> Add Subjects</a></li>
             <li>
               <hr cDropdownDivider>
             </li>
             <li>
-              <button cDropdownItem><svg cIcon name="cilPlus" class="me-2"></svg>Create New Task</button>
+              <button cDropdownItem><svg cIcon [cIcon]="cilPlus" class="me-2"></svg>Create New Task</button>
             </li>
           </ul>
         </c-dropdown>
