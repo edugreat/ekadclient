@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { inject, Injectable } from '@angular/core';
+import { inject, Injectable, signal, WritableSignal } from '@angular/core';
 import { ApiEndpoints } from '../api/api-endpoints';
 import { BehaviorSubject, Observable, of, take, tap } from 'rxjs';
 
@@ -22,12 +22,20 @@ export class AuthService {
 
   public userName$ = this.currentUsernameSubject.asObservable();
 
-  private currentUser?:User;
+  private currentUserSubject = new BehaviorSubject<User|undefined>(undefined);
+  public currentUserOb$ = this.currentUserSubject.asObservable();
+
+   currentUser:WritableSignal<User|undefined> = signal(undefined);
+  
 
   // This flag is used to stop anyother requests from proceeding while refresh token process is ongoing, until it completes
   private _refreshTokenInProcess = false;
 
-  constructor() { }
+  public loadRsources = signal(true);
+ 
+  constructor() {
+   
+   }
 
   login(email:string, password:string, role:string):Observable<User>{
 
@@ -35,26 +43,31 @@ export class AuthService {
       { email:`${email}`, password:`${password}`}
     ).pipe(tap(user => {
       this.loggedInUserSubject.next(user);
-      this.saveToSessionStorage(user);
-      this.currentUser = user;
+      this.getGroupChatJoinDates(user);
+      this.currentUserSubject.next(user);
+      this.currentUser.set(user)
       this.currentUsernameSubject.next(`${user.firstName}`);
     }))
 
   }
 
   // returned redis cached object of loggedin user from the server
-  getCachedUser(cacheKey:string):Observable<User>{
+  getCachedUser(userId:string):Observable<User>{
 
-    return this.http.get<User>(`${this.apiEndpoints.auth.cachedUser}?cache=${cacheKey}`).pipe(tap(user => {
+    return this.http.get<User>(`${this.apiEndpoints.auth.cachedUser}?cache=${userId}`).pipe(tap(user => {
     
       if(!user){
-       this.logout();
+
+       
+       this.logout(userId);
 
        return;
       }
 
-      this.currentUser = user;
-      this.saveToSessionStorage(user);
+    
+      this.currentUserSubject.next(user);
+      this.currentUser.set(user)
+      this.getGroupChatJoinDates(user);
       this.loggedInUserSubject.next(user);
       this.currentUsernameSubject.next(`${user.firstName}`);
 
@@ -62,26 +75,28 @@ export class AuthService {
 
   }
 
-  logout():Observable<void>{
+  public setReloadState(reload:boolean){
 
-     const cachedKey = sessionStorage.getItem('cachingKey');
-   if(cachedKey){
+    this.loadRsources.set(reload)
+
+  }
+
+  logout(userId:string):Observable<void>{
+
     return this.http.post<void>(this.apiEndpoints.auth.disconnect, {
-      headers:{id:cachedKey}
+      headers:{id:userId}
     }).pipe(tap(() => {
       this.postLogoutResets();
     }));
-   }
+  
 
-   return of(undefined).pipe(tap(() => {
-    this.postLogoutResets();
-   }))
+  
 
   }
 
   private postLogoutResets() {
 
-    this.currentUser = undefined;
+    this.currentUserSubject.next(undefined);
     sessionStorage.clear();
     this.loggedInUserSubject.next(undefined);
     this.groupJoinDateSubject.next(undefined);
@@ -94,26 +109,14 @@ export class AuthService {
 
     const refreshToken = sessionStorage.getItem('refreshToken');
     return this.http.post<User>(`${this.apiEndpoints.auth.refreshToken}`,{'refreshToken':refreshToken}).pipe(
-      tap(user => this.saveToSessionStorage(user))
+      tap(user => this.getGroupChatJoinDates(user))
     )
 
    }
    
 
-  private saveToSessionStorage(user:User){
-    sessionStorage.setItem('user', JSON.stringify(user));
-  
-    sessionStorage.setItem("logged", "yes");
-    sessionStorage.setItem('cachingKey', String(user.id));
-
-    sessionStorage.setItem('accessToken', user.accessToken);
+  private getGroupChatJoinDates(user:User){
    
-    // sets the refresh token once as it serves only for requesting new tokens
-    if(!sessionStorage.getItem('refreshToken')){
-
-      sessionStorage.setItem('refreshToken', user.refreshToken);
-   
-  }
 
   if(this.isStudent(user) && user.isGroupMember){
    this.groupJoinedDate(user.id).pipe(take(1)).subscribe();
@@ -124,12 +127,12 @@ export class AuthService {
 
 public get isSuperAdmin(){
 
-  return this.currentUser ? this.currentUser.roles.map(r => r.toLowerCase()).includes('superadmin') : false;
+  return this.currentUser() ? this.currentUser()!.roles.map(r => r.toLowerCase()).includes('superadmin') : false;
 }
 
  get isAdmin(){
 
-  return this.currentUser ? this.currentUser.roles.map(r => r.toLowerCase()).includes('admin') : false;;
+  return this.currentUser() ? this.currentUser()!.roles.map(r => r.toLowerCase()).includes('admin') : false;;
 }
 
 private groupJoinedDate(userId:number):Observable<Map<number, Date>>{
@@ -156,6 +159,8 @@ public set refreshTokenInProcess(inProcess:boolean){
     return user.roles.includes('Student');
 
   }
+
+ 
 
   
 }

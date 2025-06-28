@@ -1,0 +1,8 @@
+{
+    "angular.enable-strict-mode": true,
+    "typescript.tsserver.pluginPaths": ["@angular/language-service"],
+    "editor.codeActionsOnSave": {
+      "source.organizeImports": true,
+      "source.fixAll.eslint": true
+    }
+  }

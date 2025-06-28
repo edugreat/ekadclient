@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, effect, inject, OnInit } from '@angular/core';
 
 
 import { AssessmentStepperComponent } from '../dashboard-items/assessment-stepper/assessment-stepper.component'
@@ -34,20 +34,15 @@ export class DashboardComponent implements OnInit {
   private dashboardStateService = inject(DashboardStateService);
 
   hideStepper = toSignal(this.dashboardStateService.hideStepper$);
+ 
 
+constructor(){
 
+ 
+}
 
-  ngOnInit(): void {
-   
-  }
-
-  get md(){
-
-    return this.hideStepper() ? '12':'10';
-  }
-
-  get lg(){
-
-    return this.hideStepper() ? '12' : '10'
-  }
+  // In dashboard.component.ts
+ngOnInit(): void {
+  
+}
 }

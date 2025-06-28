@@ -1,10 +1,24 @@
 <c-card class="subject-upload-container">
-    <c-card-header>
+  <c-card-header>
+    <div class="d-flex align-items-center justify-content-between">
       <div class="d-flex align-items-center">
         <svg cIcon [cIcon]="cilBook" class="me-2"></svg>
         <h5 class="mb-0">Subject Management</h5>
       </div>
-    </c-card-header>
+      
+      <!-- Error Display Section -->
+      <div *ngIf="errorMessage"  class="error-message-container">
+        <c-alert color="danger" class="mb-0 py-2">
+          <svg cIcon [cIcon]="cilWarning" class="me-2"></svg>
+        {{errorMessage}}
+        </c-alert>
+      </div>
+      <div *ngIf="uploadingState() === 'success'" class="text-success">
+        <svg cIcon name="cilThumbUp" size="xl" class="animate__animated animate__bounceIn"></svg>
+        <p class="mt-2">uploaded!</p>
+      </div>
+    </div>
+  </c-card-header>
   
     <c-card-body>
       <form cForm [formGroup]="subjectForm" (ngSubmit)="onSubmit()">
@@ -31,7 +45,7 @@
               formControlName="category"
               (change)="onCategoryChange()">
               <option value="">Select a category</option>
-              <option *ngFor="let cat of categories" [value]="cat">
+              <option *ngFor="let cat of existingCategories" [value]="cat">
                 {{ cat }}
               </option>
             </select>
@@ -94,7 +108,7 @@
               cButton 
               color="success" 
               type="submit"
-              [disabled]="subjects.length === 0 || disableAdd || submissionStatus() === 'busy'">
+              [disabled]="disableSubmission || submissionStatus() === 'busy'">
              <span *ngIf="submissionStatus() === 'nil'">
                 <svg cIcon [cIcon]="cilCloudUpload" class="me-1"></svg> Upload Subjects
              </span>

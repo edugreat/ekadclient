@@ -1,7 +1,6 @@
 import { NgTemplateOutlet } from '@angular/common';
 import { Component, computed, inject, input } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
-import { cilInput, cilUser } from '@coreui/icons';
 
 import {
   AvatarComponent,
@@ -51,8 +50,8 @@ import { IconDirective } from '@coreui/icons-angular';
 })
 export class DefaultHeaderComponent extends HeaderComponent {
 
-  login = cilInput;
-  user = cilUser
+  
+ 
   
 
   readonly #colorModeService = inject(ColorModeService);

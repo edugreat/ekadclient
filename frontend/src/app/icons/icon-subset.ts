@@ -52,6 +52,7 @@ import {
   cilInbox,
   cilIndentDecrease,
   cilIndentIncrease,
+  cilInput,
   cilItalic,
   cilJustifyCenter,
   cilLanguage,
@@ -88,6 +89,7 @@ import {
   cilSun,
   cilTags,
   cilTask,
+  cilThumbUp,
   cilTrash,
   cilUnderline,
   cilUser,
@@ -196,7 +198,11 @@ export const iconSubset = {
   cilUserFollow,
   cilUserUnfollow,
   logo,
-  signet
+  signet,
+  cilInput,
+  cilThumbUp
+
+ 
 };
 
 export enum IconSubset {

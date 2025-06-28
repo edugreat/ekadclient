@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { RouterLink, RouterOutlet } from '@angular/router';
 import { NgScrollbar } from 'ngx-scrollbar';
 
@@ -17,6 +17,7 @@ import {
 
 import { DefaultFooterComponent, DefaultHeaderComponent } from './';
 import { navItems } from './_nav';
+import { AuthService } from '../../views/auth.service';
 
 function isOverflown(element: HTMLElement) {
   return (
@@ -47,6 +48,25 @@ function isOverflown(element: HTMLElement) {
     ShadowOnScrollDirective
   ]
 })
-export class DefaultLayoutComponent {
+export class DefaultLayoutComponent implements OnDestroy, OnInit {
+
+  private authService = inject(AuthService);
   public navItems = [...navItems];
+
+  constructor(){
+
+    
+
+  }
+
+  ngOnInit(): void {
+    
+  }
+  ngOnDestroy(): void {
+   
+  }
+
+ 
+
+  
 }

@@ -7,17 +7,21 @@
   </c-row>
   
   <c-row class="main-content-row">
+   
     <c-col *ngIf="!hideStepper()" xs="12" md="2" lg="2" class="fixed-stepper-col">
       <div class="stepper-div fixed-stepper">
         <app-assessment-stepper/>
       </div>
     </c-col>
-    <c-col xs="12" [md]="md" [lg]="lg"
-    
-    class="scrollable-content-col">
-      <div class="content-wrapper">
-        <router-outlet></router-outlet>
-      </div>
-    </c-col>
+
+  <c-col xs="12" md="10" lg="10" class="scrollable-content-col">
+    <div class="content-wrapper">
+      <router-outlet></router-outlet>
+    </div>
+  </c-col>
+
   </c-row>
 </div>
+
+
+

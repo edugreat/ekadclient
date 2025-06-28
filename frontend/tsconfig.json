@@ -32,7 +32,11 @@
     "strictInjectionParameters": true,
     "strictInputAccessModifiers": true,
     "typeCheckHostBindings": true,
-    "strictTemplates": true
+    "strictTemplates": true,
+    "strictNullChecks":true,
+    "strictInputTypes":true,
+    "strictPropertyInitialization": true,
+    "strictDomLocalRefTypes": true
   },
   "files": [],
   "references": [

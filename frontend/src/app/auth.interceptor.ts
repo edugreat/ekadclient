@@ -3,16 +3,24 @@ import { inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { catchError, Observable, switchMap, throwError } from 'rxjs';
 import { AuthService } from './views/auth.service';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 
 export const authInterceptor: HttpInterceptorFn = (req: HttpRequest<any>, next: HttpHandlerFn): Observable<HttpEvent<any>> => {
   const router = inject(Router);
   const authService = inject(AuthService);
 
-  const accessToken = sessionStorage.getItem('accessToken');
+  const currentUser = authService.currentUser;
 
-  if (accessToken) {
+ 
+
+  if (currentUser && currentUser()) {
+
+    const accessToken = currentUser()!.accessToken;
+    const refreshToken = currentUser()!.refreshToken;
+
     const Authorization = `Bearer ${accessToken}`;
+    const userId = String(currentUser()!.id);
 
     return next(req.clone({ setHeaders: { Authorization } })).pipe(
       catchError((error: HttpErrorResponse) => {
@@ -22,15 +30,15 @@ export const authInterceptor: HttpInterceptorFn = (req: HttpRequest<any>, next: 
           return authService.requestNewToken().pipe(
             switchMap(() => {
               authService.refreshTokenInProcess = false;
-              const newAccessToken = sessionStorage.getItem('accessToken');
-              const newAuthorization = `Bearer ${newAccessToken}`;
+             
+              const newAuthorization = `Bearer ${refreshToken}`;
 
               return next(req.clone({ setHeaders: { Authorization: newAuthorization } }));
             }),
             catchError(err => {
               authService.refreshTokenInProcess = false;
-              sessionStorage.removeItem('refreshToken');
-              authService.logout();
+              
+              authService.logout(userId);
               router.navigate(['/login']);
               return throwError(() => err);
             })
@@ -38,7 +46,7 @@ export const authInterceptor: HttpInterceptorFn = (req: HttpRequest<any>, next: 
         } else if (error.status === HttpStatusCode.Forbidden) {
           router.navigate(['/no-access', error.status]); //Route to forbidden page
         } else if (error.status === HttpStatusCode.NotAcceptable) {
-          authService.logout();
+          authService.logout(userId);
           router.navigate(['/disabled']); //Route to forbidden page
         }
         return throwError(() => error);

@@ -58,6 +58,10 @@
   padding-right: 1.5rem;
 }
 
+.scrollable-content-col {
+  transition: width 0.3s ease;
+}
+
 /* Widget styling */
 app-widgets-dropdown {
   width: 100%;
