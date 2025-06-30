@@ -1,0 +1,124 @@
+<c-row>
+    <c-col xs="12">
+      <c-card>
+        <c-card-header>
+          <strong>Assessment Information</strong>
+        </c-card-header>
+        <c-card-body>
+          <!-- Loading State -->
+          <div *ngIf="loadingState() === 'busy'" class="text-center">
+            <c-spinner />
+          </div>
+  
+          <!-- Success Toast -->
+          <c-toaster position="top-end">
+            <c-toast *ngIf="showSuccessToast()" [autohide]="true" delay="3000" [visible]="showSuccessToast()">
+              <c-toast-header class="text-success">
+                <strong class="me-auto">Success</strong>
+              </c-toast-header>
+              <c-toast-body>{{ successMessage() }}</c-toast-body>
+            </c-toast>
+          </c-toaster>
+  
+          <!-- Assessment List -->
+          <div *ngIf="loadingState() === 'nil' && paginatedAssessments.length">
+            <table cTable>
+              <thead>
+                <tr>
+                  <th scope="col">Subject</th>
+                  <th scope="col">Test</th>
+                  <th scope="col">Duration</th>
+                  <th scope="col">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <ng-container *ngFor="let assessment of paginatedAssessments">
+                  <ng-container *ngFor="let test of assessment.tests">
+                    <tr>
+                      <td>{{ assessment.subjectName }}</td>
+                      <td>
+                        <span *ngIf="!editingMode() || test.id !== editingId()" 
+                              (click)="fetchQuestions(test.testName, test.id)" 
+                              class="text-primary cursor-pointer">
+                          {{ test.testName }}
+                        </span>
+                        <input *ngIf="editingMode() && test.id === editingId()"
+                               [(ngModel)]="test.testName"
+                               cFormControl
+                               class="form-control-sm" />
+                      </td>
+                      <td>
+                        <span *ngIf="!editingMode() || test.id !== editingId()">
+                          {{ test.duration }} mins
+                        </span>
+                        <input appNumeric *ngIf="editingMode() && test.id === editingId()"
+                               [(ngModel)]="test.duration"
+                               cFormControl
+                              
+                               class="form-control-sm" />
+                      </td>
+                      <td>
+                        <div class="d-flex gap-2">
+                          <button *ngIf="editingMode() && test.id === editingId()"
+                                  cButton
+                                  color="success"
+                                  size="sm"
+                                  (click)="saveChanges(test.testName, test.duration, test.id)">
+                            Save
+                          </button>
+                          <button *ngIf="editingMode() && test.id === editingId()"
+                                  cButton
+                                  color="secondary"
+                                  size="sm"
+                                  (click)="cancelEdit()">
+                            Cancel
+                          </button>
+                          <button *ngIf="!editingMode() || test.id !== editingId()"
+                                  cButton
+                                  color="primary"
+                                  size="sm"
+                                  (click)="editTest(test.id)">
+                            Edit
+                          </button>
+                          <button *ngIf="!editingMode()"
+                                  cButton
+                                  color="danger"
+                                  size="sm"
+                                  (click)="delete(test.id, test.testName)">
+                            Delete
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  </ng-container>
+                </ng-container>
+              </tbody>
+            </table>
+  
+            <!-- Pagination -->
+            <c-pagination *ngIf="totalItems() > pageSize()" aria-label="Assessment pagination">
+              <c-page-item [disabled]="currentPage() === 1">
+                <a cPageLink (click)="onPageChange(currentPage() - 1)">Previous</a>
+              </c-page-item>
+              
+              <c-page-item *ngFor="let page of getPageNumbers()" [active]="page === currentPage()">
+                <a cPageLink (click)="onPageChange(page)">{{ page }}</a>
+              </c-page-item>
+              
+              <c-page-item [disabled]="currentPage() === pageCount()">
+                <a cPageLink (click)="onPageChange(currentPage() + 1)">Next</a>
+              </c-page-item>
+            </c-pagination>
+          </div>
+  
+          <!-- Empty State -->
+          <div *ngIf="loadingState() === 'nil' && !paginatedAssessments.length" class="text-center py-4">
+            No assessment data available
+          </div>
+        </c-card-body>
+      </c-card>
+    </c-col>
+  </c-row>
+  <app-confirmation/>
+
+  

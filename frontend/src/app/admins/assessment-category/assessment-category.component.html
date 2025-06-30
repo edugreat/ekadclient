@@ -1,0 +1,116 @@
+<c-card class="category-container">
+    <c-card-header>
+      <div class="d-flex justify-content-between align-items-center">
+        <div>
+          <h5 class="mb-1">
+            <svg cIcon name="cilListRich" class="me-2"></svg>
+            Assessment Categories
+          </h5>
+          <p class="page-description mb-0">
+            Define categories to organize your academic assessments (e.g., "Creche", "Junior", "Senior","...").
+            These will help group similar assessments for better tracking and reporting.
+          </p>
+        </div>
+        <div class="status-message">
+          <c-alert *ngIf="successMessage" color="success" class="mb-0 py-2 fade-in">
+            <svg cIcon name="cilCheckCircle" class="me-2"></svg>
+            {{ successMessage }}
+          </c-alert>
+          <c-alert *ngIf="errorMessage" color="danger" class="mb-0 py-2 fade-in">
+            <svg cIcon name="cilWarning" class="me-2"></svg>
+            {{ errorMessage }}
+          </c-alert>
+        </div>
+      </div>
+    </c-card-header>
+  
+    <c-card-body>
+        <form cForm [formGroup]="categoryForm" (ngSubmit)="submitCategories()">
+            <!-- Hidden ID Field -->
+            <input type="hidden" formControlName="id">
+      
+            <!-- Category Name Input -->
+            <c-row class="mb-4">
+              <c-col xs="12" md="8" lg="9">
+                <label cLabel for="categoryName">Category Name</label>
+                <input
+                  cFormControl
+                  id="categoryName"
+                  type="text"
+                  formControlName="categoryName"
+                  placeholder="Enter assessment category"
+                  [ngClass]="{ 'is-invalid': categoryForm.get('categoryName')?.invalid && categoryForm.get('categoryName')?.touched }">
+                <c-form-feedback [valid]="false" *ngIf="categoryForm.get('categoryName')?.invalid && categoryForm.get('categoryName')?.touched">
+                  Category name is required (3-50 characters)
+                </c-form-feedback>
+              </c-col>
+              <c-col xs="12" md="4" lg="3" class="d-flex align-items-end">
+                <button
+                cButton
+                color="primary"
+                type="button"
+                class="btn-action"
+                [disabled]="invalidInput || isAdding() ||  categoryForm.invalid"
+                (click)="addCategory()">
+                <span *ngIf="!isAdding(); else addingSpinner">
+                  <svg cIcon name="cilPlus" class="btn-icon"></svg> Add Category
+                </span>
+                <ng-template #addingSpinner>
+                  <svg cIcon name="cilLoopCircular" class="btn-icon spin"></svg> Adding...
+                </ng-template>
+              </button>
+
+
+              </c-col>
+            </c-row>
+      
+            <!-- Categories List -->
+            <c-row *ngIf="categories.length > 0">
+              <c-col xs="12">
+                <c-card class="category-list-card">
+                  <c-card-header>
+                    <h6>Added Categories ({{ categories.length }})</h6>
+                  </c-card-header>
+                  <c-card-body>
+                    <div class="category-list-group">
+                      <div *ngFor="let category of categories; let $index=index" class="category-list-item">
+                        <span class="category-badge">{{ $index + 1 }}</span>
+                        <div class="category-name">{{ category.category }}</div>     
+              <button
+              cButton
+              color="danger"
+              size="sm"
+              variant="ghost"
+              class="btn-delete"
+              (click)="removeCategory(category.id)">
+              <svg cIcon name="cilTrash" class="btn-icon-sm"></svg> 
+              Remove
+            </button>
+                      </div>
+                    </div>
+                  </c-card-body>
+                </c-card>
+              </c-col>
+            </c-row>
+      
+            <!-- Submit Button -->
+            <c-row class="mt-4">
+              <c-col xs="12" class="text-end">
+                <button
+                cButton
+                color="success"
+                type="submit"
+                class="btn-submit"
+                [disabled]="categories.length === 0 || isSubmitting()">
+                <span *ngIf="!isSubmitting(); else submitSpinner">
+                  <svg cIcon name="cilCloudUpload" class="btn-icon"></svg> Upload Categories
+                </span>
+                <ng-template #submitSpinner>
+                  <svg cIcon name="cilLoopCircular" class="btn-icon spin"></svg> Processing...
+                </ng-template>
+              </button>
+              </c-col>
+            </c-row>
+          </form>
+    </c-card-body>
+  </c-card>

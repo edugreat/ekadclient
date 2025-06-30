@@ -1,0 +1,35 @@
+/* Custom styles for the assessment view */
+.category-details-container {
+  max-height: calc(100vh - 250px);
+  overflow-y: auto;
+  padding: 1rem;
+  border: 1px solid #dee2e6;
+  border-radius: 0.25rem;
+}
+
+.alert {
+  margin-bottom: 1rem;
+}
+
+/* Dropdown custom styles */
+c-dropdown {
+  display: block;
+}
+
+.dropdown-menu {
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+[cDropdownToggle] {
+  &::after {
+    margin-left: auto; /* Align caret to the right */
+  }
+}
+
+[cDropdownItem] {
+  padding: 0.5rem 1rem;
+  &:hover {
+    background-color: #f8f9fa;
+  }
+}

@@ -1,0 +1,50 @@
+<c-col xs="12">
+  <c-card>
+    <c-card-header>
+      <strong>Academic Assessment Categories</strong>
+    </c-card-header>
+    <c-card-body>
+      <!-- Error Message Display -->
+      <div *ngIf="errorMessage" class="alert alert-danger mb-3">
+        {{ errorMessage }}
+      </div>
+
+      <!-- No Data Message -->
+      <div *ngIf="noDataMessage && !errorMessage" class="alert alert-info mb-3">
+        {{ noDataMessage }}
+      </div>
+
+      <!-- Categories Dropdown -->
+      <div class="mb-4">
+        <c-dropdown *ngIf="categories.length > 0" class="w-100">
+          <button cButton 
+                  cDropdownToggle 
+                  color="primary" 
+                  class="w-100 text-start d-flex justify-content-between align-items-center"
+                  [disabled]="isLoading()">
+            <span>{{ selectedCategory?.category || 'Select Category' }}</span>
+            <span *ngIf="isLoading()" class="ms-2">
+              <c-spinner size="sm"></c-spinner>
+            </span>
+          </button>
+          <ul cDropdownMenu class="w-100">
+           
+            <li *ngFor="let category of categories">
+              <a cDropdownItem 
+                
+                 (click)="selectCategory(category)"
+                 class="text-decoration-none">
+                {{ category.category }}
+              </a>
+            </li>
+          </ul>
+        </c-dropdown>
+      </div>
+
+      <!-- Router Outlet for Category Details -->
+      <div class="category-details-container">
+        <router-outlet></router-outlet>
+      </div>
+    </c-card-body>
+  </c-card>
+</c-col>

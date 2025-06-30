@@ -1,0 +1,39 @@
+/* Custom modal styling */
+c-modal {
+    .modal-content {
+      border: none;
+      border-radius: 0.5rem;
+      box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+    }
+  
+    .modal-header {
+      border-bottom: 1px solid var(--cui-border-color);
+      padding: 1rem 1.5rem;
+    }
+  
+    .modal-body {
+      padding: 1.5rem;
+    }
+  
+    .modal-footer {
+      border-top: 1px solid var(--cui-border-color);
+      padding: 1rem 1.5rem;
+      justify-content: flex-end;
+      gap: 0.5rem;
+    }
+  }
+  
+  /* Button hover states using CoreUI variables */
+  .btn-danger {
+    &:hover {
+      background-color: var(--cui-btn-hover-bg);
+      border-color: var(--cui-btn-hover-border-color);
+    }
+  }
+  
+  .btn-secondary {
+    &:hover {
+      background-color: var(--cui-btn-hover-bg);
+      border-color: var(--cui-btn-hover-border-color);
+    }
+  }

@@ -205,6 +205,13 @@ updateCategoryName(currentName:string, previousName: string):Observable<HttpResp
 
 }
 
+uploadAssessmentCategories(categories:Category[]):Observable<HttpResponse<number>>{
+
+  return this.http.post<HttpStatusCode>(this.apiEndpoints.admin.postCategory, categories, {'observe':'response'});
+
+
+}
+
 // communicates to the server to delete the assessment category referenced by 'category'
 deleteCategory(category: number):Observable<HttpResponse<number>> {
   
@@ -334,7 +341,7 @@ export interface AssessmentInfo{
 export interface AssessmentCategory{
 
   _embedded:{
-    levels:Array<{id:number, category:string}>
+    levels:Array<Category>
   },
   page:{
     size:number,
@@ -373,3 +380,9 @@ export type TestDTO = {
   institutionId?: number
 
 };
+
+export type Category = {
+
+  id:number,
+  category:string
+}

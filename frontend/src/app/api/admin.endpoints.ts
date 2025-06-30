@@ -28,8 +28,9 @@ export class AdminEndpoints {
    readonly uploadSubjects = `${this.baseUrl}/admins/subjects`
   
   // Category Management
-   readonly updateCategory = `${this.baseUrl}/admins/update/category`;
-   readonly deleteCategory = `${this.baseUrl}/admins/delete/category`;
+   readonly updateCategory = `${this.baseUrl}/admins/update/categories`;
+   readonly deleteCategory = `${this.baseUrl}/admins/delete/categories`;
+   readonly postCategory =   `${this.baseUrl}/admins/categories`
   
   // User Management
    readonly register = `${this.baseUrl}/admins/register`;

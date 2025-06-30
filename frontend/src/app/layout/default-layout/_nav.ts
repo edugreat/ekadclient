@@ -134,50 +134,50 @@ export const navItems: INavData[] = [
     ]
   },
   {
-    name: 'Forms',
-    url: '/forms',
+    name: 'Assessments',
+    url: '/assessments',
     iconComponent: { name: 'cil-notes' },
     children: [
       {
-        name: 'Form Control',
-        url: '/forms/form-control',
+        name: 'View Assessments',
+        url: '/assessments/view',
         icon: 'nav-icon-bullet'
       },
-      {
-        name: 'Select',
-        url: '/forms/select',
-        icon: 'nav-icon-bullet'
-      },
-      {
-        name: 'Checks & Radios',
-        url: '/forms/checks-radios',
-        icon: 'nav-icon-bullet'
-      },
-      {
-        name: 'Range',
-        url: '/forms/range',
-        icon: 'nav-icon-bullet'
-      },
-      {
-        name: 'Input Group',
-        url: '/forms/input-group',
-        icon: 'nav-icon-bullet'
-      },
-      {
-        name: 'Floating Labels',
-        url: '/forms/floating-labels',
-        icon: 'nav-icon-bullet'
-      },
-      {
-        name: 'Layout',
-        url: '/forms/layout',
-        icon: 'nav-icon-bullet'
-      },
-      {
-        name: 'Validation',
-        url: '/forms/validation',
-        icon: 'nav-icon-bullet'
-      }
+      // {
+      //   name: 'Select',
+      //   url: '/forms/select',
+      //   icon: 'nav-icon-bullet'
+      // },
+      // {
+      //   name: 'Checks & Radios',
+      //   url: '/forms/checks-radios',
+      //   icon: 'nav-icon-bullet'
+      // },
+      // {
+      //   name: 'Range',
+      //   url: '/forms/range',
+      //   icon: 'nav-icon-bullet'
+      // },
+      // {
+      //   name: 'Input Group',
+      //   url: '/forms/input-group',
+      //   icon: 'nav-icon-bullet'
+      // },
+      // {
+      //   name: 'Floating Labels',
+      //   url: '/forms/floating-labels',
+      //   icon: 'nav-icon-bullet'
+      // },
+      // {
+      //   name: 'Layout',
+      //   url: '/forms/layout',
+      //   icon: 'nav-icon-bullet'
+      // },
+      // {
+      //   name: 'Validation',
+      //   url: '/forms/validation',
+      //   icon: 'nav-icon-bullet'
+      // }
     ]
   },
   {

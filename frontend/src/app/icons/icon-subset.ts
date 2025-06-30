@@ -33,9 +33,11 @@ import {
   cilChart,
   cilChartPie,
   cilCheck,
+  cilCheckCircle,
   cilChevronLeft,
   cilChevronRight,
   cilCloudDownload,
+  cilCloudUpload,
   cilCode,
   cilCommentSquare,
   cilContrast,
@@ -59,14 +61,17 @@ import {
   cilLayers,
   cilList,
   cilListNumbered,
+  cilListRich,
   cilLocationPin,
   cilLockLocked,
+  cilLoopCircular,
   cilMagnifyingGlass,
   cilMap,
   cilMediaPlay,
   cilMediaRecord,
   cilMenu,
   cilMoon,
+  cilNoteAdd,
   cilNotes,
   cilOptions,
   cilPaperclip,
@@ -74,6 +79,7 @@ import {
   cilPen,
   cilPencil,
   cilPeople,
+  cilPlus,
   cilPrint,
   cilPuzzle,
   cilReportSlash,
@@ -95,7 +101,8 @@ import {
   cilUser,
   cilUserFemale,
   cilUserFollow,
-  cilUserUnfollow
+  cilUserUnfollow,
+  cilWarning
 } from '@coreui/icons';
 
 import { signet } from './signet';
@@ -200,7 +207,19 @@ export const iconSubset = {
   logo,
   signet,
   cilInput,
-  cilThumbUp
+  cilThumbUp,
+  cilListRich,
+  cilPlus,
+  cilCloudUpload,
+  cilLoopCircular,
+  cilCheckCircle,
+  cilWarning,
+  cilNoteAdd,
+  
+ 
+ 
+  
+  
 
  
 };
@@ -235,6 +254,7 @@ export enum IconSubset {
   cilBell = 'cilBell',
   cilBold = 'cilBold',
   cilBookmark = 'cilBookmark',
+  
   cilCalculator = 'cilCalculator',
   cilCalendar = 'cilCalendar',
   cilChart = 'cilChart',

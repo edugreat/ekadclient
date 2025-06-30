@@ -1,0 +1,12 @@
+<c-modal [visible]="visible" (visibleChange)="visible = $event" backdrop="static">
+    <c-modal-header>
+      <h5 cModalTitle>Confirm Action</h5>
+    </c-modal-header>
+    <c-modal-body>
+      <p [innerHTML]="message"></p>
+    </c-modal-body>
+    <c-modal-footer>
+      <button cButton color="secondary" (click)="confirm(false)">Cancel</button>
+      <button cButton color="danger" (click)="confirm(true)">Confirm</button>
+    </c-modal-footer>
+  </c-modal>

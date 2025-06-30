@@ -1,0 +1,66 @@
+/* Table styles */
+.table {
+    th {
+      font-weight: 600;
+      background-color: #f8f9fa;
+    }
+    
+    td {
+      vertical-align: middle;
+    }
+  }
+  
+  /* Clickable text */
+  .cursor-pointer {
+    cursor: pointer;
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+  
+  /* Pagination styling */
+  c-pagination {
+    justify-content: center;
+    margin-top: 1.5rem;
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .table-responsive {
+      display: block;
+      width: 100%;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+    
+    .btn-sm {
+      padding: 0.25rem 0.5rem;
+      font-size: 0.75rem;
+    }
+  }
+  
+  /* Toast positioning */
+  c-toaster {
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
+    z-index: 1100;
+  }
+  
+  /* Form control sizing */
+  .form-control-sm {
+    height: calc(1.5em + 0.5rem + 2px);
+    padding: 0.25rem 0.5rem;
+    font-size: 0.875rem;
+    line-height: 1.5;
+  }
+  
+  /* Button spacing */
+  .gap-2 {
+    gap: 0.5rem;
+  }
+  
+  /* Pagination links */
+  c-page-item a {
+    cursor: pointer;
+  }
