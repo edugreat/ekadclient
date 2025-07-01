@@ -2,7 +2,18 @@
     <c-col xs="12">
       <c-card>
         <c-card-header>
-          <strong>Assessment Information</strong>
+          <div class="d-flex justify-content-between align-items-center">
+            <strong>Assessment Information</strong>
+            <c-dropdown class="sort-dropdown">
+              <button  cButton cDropdownToggle color="light" size="sm" class="p-0 border-0 bg-transparent">
+                <svg cIcon name="cilSortAlphaDown" size="sm"></svg>
+              </button>
+              <ul cDropdownMenu>
+                <li><button [disabled]="!assessments.length" cDropdownItem (click)="sortBy('subjectName')">Subject (A-Z)</button></li>
+                <li><button [disabled]="!assessments.length" cDropdownItem (click)="sortBy('subjectNameDesc')">Subject (Z-A)</button></li>
+              </ul>
+            </c-dropdown>
+          </div>
         </c-card-header>
         <c-card-body>
           <!-- Loading State -->
@@ -38,7 +49,7 @@
                       <td>{{ assessment.subjectName }}</td>
                       <td>
                         <span *ngIf="!editingMode() || test.id !== editingId()" 
-                              (click)="fetchQuestions(test.testName, test.id)" 
+                              (click)="fetchQuestions(test.id, test.testName)" 
                               class="text-primary cursor-pointer">
                           {{ test.testName }}
                         </span>
@@ -120,5 +131,6 @@
     </c-col>
   </c-row>
   <app-confirmation/>
+  <router-outlet/>
 
   

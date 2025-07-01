@@ -17,10 +17,9 @@ export const routes: Routes = [
 
       {
         path: ':categoryId',
-        loadComponent: () => import('./assessment-info/assessment-info.component').then(m => m.AssessmentInfoComponent),
-        data: {
-          title: 'Assessment information'
-        }
+       
+       loadChildren:() => import('./assessment-info/routes').then(m => m.routes)
+     
       },
 
       {

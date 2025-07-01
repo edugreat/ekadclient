@@ -1,0 +1,310 @@
+/* Main card styles */
+.question-card {
+  border-radius: 0.5rem;
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+}
+
+.card-header-custom {
+  background-color: #f8f9fa;
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+}
+
+.card-header-custom .card-title {
+  font-size: 1.25rem;
+  margin: 0;
+}
+
+/* Dropdown styles */
+/* Dropdown styles */
+.sort-dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.sort-dropdown .dropdown-toggle-btn {
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  background-color: transparent;
+  border: none;
+  color: #495057;
+}
+
+.sort-dropdown .dropdown-toggle-btn:hover, 
+.sort-dropdown .dropdown-toggle-btn:focus {
+  background-color: #e9ecef;
+  color: #495057;
+}
+
+.sort-dropdown .dropdown-menu {
+  position: absolute;
+  right: 0;
+  left: auto;
+  min-width: 10rem;
+  padding: 0.5rem 0;
+  margin: 0.125rem 0 0;
+  font-size: 0.875rem;
+  color: #212529;
+  background-color: #fff;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  border-radius: 0.25rem;
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.175);
+  z-index: 1000;
+  list-style: none;
+  display: none;
+}
+
+.sort-dropdown.show .dropdown-menu {
+  display: block;
+}
+
+.sort-dropdown .dropdown-item {
+  display: block;
+  width: 100%;
+  padding: 0.25rem 1rem;
+  clear: both;
+  font-weight: 400;
+  color: #212529;
+  text-align: inherit;
+  white-space: nowrap;
+  background-color: transparent;
+  border: 0;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.sort-dropdown .dropdown-item:hover {
+  background-color: #f8f9fa;
+}
+
+/* Table styles */
+.table-container {
+  margin-bottom: 1.5rem;
+}
+
+.question-table {
+  width: 100%;
+  margin-bottom: 1rem;
+  color: #212529;
+  border-collapse: collapse;
+}
+
+.question-table th {
+  font-weight: 600;
+  background-color: #f8f9fa;
+  padding: 0.75rem;
+  vertical-align: bottom;
+  border-bottom: 2px solid #dee2e6;
+  text-align: left;
+}
+
+.question-table td {
+  padding: 0.75rem;
+  vertical-align: middle;
+  border-top: 1px solid #dee2e6;
+}
+
+.question-table .question-number {
+  font-weight: 600;
+  color: #495057;
+}
+
+.question-table .question-text {
+  line-height: 1.5;
+}
+
+.question-table .question-answer {
+  font-weight: 600;
+  color: #28a745;
+}
+
+.question-table .options-list {
+  margin: 0;
+  padding-left: 1.25rem;
+  list-style-type: none;
+}
+
+.question-table .options-list li {
+  margin-bottom: 0.25rem;
+  line-height: 1.4;
+}
+
+.question-table .action-buttons {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.question-table .action-btn {
+  padding: 0.25rem;
+  border-radius: 0.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+}
+
+.question-table .action-btn:hover {
+  opacity: 0.9;
+}
+
+.question-table .action-btn.edit-btn {
+  background-color: var(--cui-primary);
+  border-color: var(--cui-primary);
+}
+
+.question-table .action-btn.edit-btn:hover {
+  background-color: #0069d9;
+}
+
+.question-table .action-btn.delete-btn {
+  background-color: var(--cui-danger);
+  border-color: var(--cui-danger);
+}
+
+.question-table .action-btn.delete-btn:hover {
+  background-color: #c82333;
+}
+
+.question-table .action-btn c-icon {
+  color: white;
+}
+
+/* Loading and error states */
+.loading-spinner {
+  padding: 2rem 0;
+}
+
+.error-message {
+  padding: 0.75rem 1.25rem;
+  border-radius: 0.25rem;
+}
+
+/* Edit form styles */
+.edit-form {
+  border: 1px solid rgba(0, 0, 0, 0.125);
+  border-radius: 0.5rem;
+}
+
+.edit-form .edit-header {
+  background-color: #f8f9fa;
+  padding: 0.75rem 1.25rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+}
+
+.edit-form .edit-body {
+  padding: 1.25rem;
+}
+
+.update-question-form .form-group {
+  margin-bottom: 1rem;
+}
+
+.update-question-form .form-label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  color: #495057;
+}
+
+.update-question-form .form-control {
+  width: 100%;
+  padding: 0.375rem 0.75rem;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: #495057;
+  background-color: #fff;
+  background-clip: padding-box;
+  border: 1px solid #ced4da;
+  border-radius: 0.25rem;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.update-question-form .form-control:focus {
+  border-color: #80bdff;
+  outline: 0;
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.update-question-form textarea.form-control {
+  min-height: 100px;
+}
+
+.update-question-form .form-actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.update-question-form .save-btn,
+.update-question-form .cancel-btn {
+  padding: 0.375rem 0.75rem;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  border-radius: 0.25rem;
+}
+
+/* Pagination styles */
+.custom-pagination .page-link {
+  padding: 0.375rem 0.75rem;
+  color: #007bff;
+  background-color: #fff;
+  border: 1px solid #dee2e6;
+}
+
+.custom-pagination .page-link:hover {
+  color: #0056b3;
+  background-color: #e9ecef;
+  border-color: #dee2e6;
+}
+
+.custom-pagination .active .page-link {
+  color: #fff;
+  background-color: #007bff;
+  border-color: #007bff;
+}
+
+.custom-pagination .disabled .page-link {
+  color: #6c757d;
+  pointer-events: none;
+  background-color: #fff;
+  border-color: #dee2e6;
+}
+
+/* MathJax styles */
+[appMathJax] {
+  display: inline-block;
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .card-header-custom {
+    padding: 0.75rem;
+  }
+
+  .card-header-custom .card-title {
+    font-size: 1rem;
+  }
+
+  .table-responsive {
+    display: block;
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .table-responsive .question-table {
+    width: 100%;
+    min-width: 600px;
+  }
+
+  .edit-form .edit-header {
+    padding: 0.5rem;
+  }
+
+  .edit-form .edit-body {
+    padding: 0.75rem;
+  }
+}

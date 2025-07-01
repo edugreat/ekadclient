@@ -88,6 +88,7 @@ import {
   cilShare,
   cilShareAll,
   cilShareBoxed,
+  cilSortAlphaDown,
   cilSpeech,
   cilSpeedometer,
   cilSpreadsheet,
@@ -215,6 +216,7 @@ export const iconSubset = {
   cilCheckCircle,
   cilWarning,
   cilNoteAdd,
+  cilSortAlphaDown
   
  
  

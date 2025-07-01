@@ -1,6 +1,6 @@
 import { Component, computed, effect, inject, signal, WritableSignal } from '@angular/core';
 import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
-import { AdminService, Category } from '../../../services/admin.service';
+import { AdminService } from '../../../services/admin.service';
 import { ConfirmationService } from "../../../services/confirmation.service";
 import { take } from 'rxjs';
 import {
@@ -19,12 +19,18 @@ import {
   ToastComponent,
   ToastHeaderComponent,
   PageItemComponent,
-  PageLinkDirective
+  PageLinkDirective,
+  DropdownComponent,
+  DropdownItemDirective,
+  DropdownMenuDirective,
+  DropdownToggleDirective
 } from '@coreui/angular';
 import { NumericDirective } from '../../../directives/numeric.directive';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ConfirmationComponent } from '../../../util/confirmation.component';
+import { cilSortAlphaDown} from '@coreui/icons';
+import { IconModule } from '@coreui/icons-angular';
 
 @Component({
   selector: 'app-assessment-info',
@@ -51,7 +57,15 @@ import { ConfirmationComponent } from '../../../util/confirmation.component';
     ToastBodyComponent,
     CommonModule,
     NumericDirective,
-    ConfirmationComponent
+    ConfirmationComponent,
+    DropdownComponent,
+ DropdownToggleDirective,
+ DropdownMenuDirective,
+
+IconModule,
+DropdownItemDirective,
+ RouterOutlet
+
    
   ]
 })
@@ -60,6 +74,9 @@ export class AssessmentInfoComponent {
   private adminService = inject(AdminService);
   private router = inject(Router);
   private confirmationService = inject(ConfirmationService);
+
+  cilSortAlphaDown = cilSortAlphaDown
+
 
   
   loadingState: WritableSignal<'nil'|'busy'> = signal('nil');
@@ -84,6 +101,8 @@ export class AssessmentInfoComponent {
   pageCount = computed(() => Math.ceil(this.totalItems() / this.pageSize()));
 
   constructor() {
+
+  
     effect(() => {
       if (this.categoryId()) {
         this.fetchAssessments(this.categoryId()!);
@@ -145,8 +164,11 @@ export class AssessmentInfoComponent {
     this.updatePagination();
   }
 
-  fetchQuestions(topic: string, testId: number) {
-    this.router.navigate([topic, testId], { relativeTo: this.activatedRoute });
+  fetchQuestions(testId: number, topic:string) {
+
+    
+  this.router.navigate([testId, topic],{relativeTo:this.activatedRoute})
+  
   }
 
   saveChanges(topic: string, duration: number, id: number) {
@@ -198,6 +220,25 @@ export class AssessmentInfoComponent {
       error: (error) => this.router.navigate(['/error', error.error]),
       complete: () => this.fetchAssessments(this.categoryId()!)
     });
+  }
+
+  sortBy(criteria: string) {
+
+    console.log(`criteria ${criteria}`)
+   
+    this.assessments.sort((a, b) => {
+
+      switch(criteria) {
+        case 'subjectName':
+          return a.subjectName.localeCompare(b.subjectName);
+        case 'subjectNameDesc':
+          return b.subjectName.localeCompare(a.subjectName);
+        default:
+          return 0;
+      }
+    });
+    this.currentPage.set(1); // Reset to first page when sorting
+    this.updatePagination();
   }
 }
 

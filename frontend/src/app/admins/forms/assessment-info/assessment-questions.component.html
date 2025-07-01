@@ -1,0 +1,128 @@
+<c-row>
+  <c-col xs="12">
+    <c-card class="question-card">
+      <c-row>
+        <c-col xs="12">
+          <c-card class="question-card">
+            <c-card-header class="card-header-custom">
+              <div class="d-flex justify-content-between align-items-center">
+                <strong class="card-title">List Of Questions On: {{assessmentTopic()}}</strong>
+                <c-dropdown class="sort-dropdown" [ngClass]="{'show': isDropdownOpen}" (click)="toggleDropdown()">
+                  <button cButton cDropdownToggle color="light" size="sm" class="dropdown-toggle-btn">
+                    <svg cIcon name="cilSortAlphaDown" size="sm"></svg>
+                  </button>
+                  <ul cDropdownMenu class="dropdown-menu">
+                    <li><a cDropdownItem (click)="sortBy('questionNumber')" class="dropdown-item">Sort by Number</a></li>
+                    <li><a cDropdownItem (click)="sortBy('question')" class="dropdown-item">Sort by Question (A-Z)</a></li>
+                    <li><a cDropdownItem (click)="sortBy('answer')" class="dropdown-item">Sort by Answer</a></li>
+                  </ul>
+                </c-dropdown>
+              </div>
+            </c-card-header>
+
+      <c-card-body class="card-body-custom">
+        <!-- Loading State -->
+        <div *ngIf="busyState() === 'busy'" class="text-center py-4 loading-spinner">
+          <c-spinner />
+        </div>
+
+        <!-- Error Message -->
+        <div *ngIf="errorMessage" class="alert alert-danger mb-3 error-message">
+          {{errorMessage}}
+        </div>
+
+        <!-- Questions Table -->
+        <div *ngIf="busyState() === 'nil'" class="table-container">
+          <div class="table-responsive">
+            <table cTable class="question-table mb-4">
+              <thead>
+                <tr>
+                  <th scope="col" width="5%">#</th>
+                  <th scope="col">Question</th>
+                  <th scope="col" width="10%">Answer</th>
+                  <th scope="col" width="25%">Options</th>
+                  <th scope="col" width="15%">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let question of paginatedQuestions" class="question-row">
+                  <td class="question-number">{{question.questionNumber}}</td>
+                  <td class="question-text" [appMathJax]="question.question"></td>
+                  <td class="question-answer">{{question.answer}}</td>
+                  <td class="question-options">
+                    <ol class="options-list">
+                      <li *ngFor="let option of question.options" [appMathJax]="option.letter+'. '+option.text"></li>
+                    </ol>
+                  </td>
+                  <td class="question-actions">
+                    <div class="action-buttons">
+                      <button cButton color="primary" size="sm" (click)="editQuestion(question.id)" class="action-btn edit-btn">
+                        <svg cIcon name="cilPencil" size="sm"></svg>
+                      </button>
+                      <button cButton color="danger" size="sm" (click)="deleteQuestion(question.questionNumber, question.id)" class="action-btn delete-btn">
+                        <svg cIcon name="cilTrash" size="sm"></svg>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Pagination -->
+          <c-pagination *ngIf="totalQuestions > pageSize()" aria-label="Questions pagination" align="center" class="custom-pagination">
+            <c-page-item [disabled]="currentIndex <= pageSize()">
+              <a cPageLink (click)="previousPage()" class="page-link">Previous</a>
+            </c-page-item>
+            <c-page-item *ngFor="let page of getPageNumbers()" [active]="isActive(page)">
+              <a cPageLink (click)="goToPage(page)" class="page-link">{{page}}</a>
+            </c-page-item>
+            <c-page-item [disabled]="currentIndex >= totalQuestions">
+              <a cPageLink (click)="nextPage()" class="page-link">Next</a>
+            </c-page-item>
+          </c-pagination>
+        </div>
+
+        <!-- Edit Form -->
+        <c-card *ngIf="editableQuestion" class="edit-form mt-4">
+          <c-card-header class="edit-header">
+            <strong>Editing Question {{currentQuestionNumber}}</strong>
+          </c-card-header>
+          <c-card-body class="edit-body">
+            <form cForm class="update-question-form">
+              <c-row class="mb-3 form-group">
+                <c-col md="12">
+                  <label cLabel for="questionText" class="form-label">Question</label>
+                  <textarea cFormControl id="questionText" [(ngModel)]="editableQuestion.question" name="question" class="form-control" required></textarea>
+                </c-col>
+              </c-row>
+
+              <c-row class="mb-3 form-group">
+                <c-col md="12">
+                  <label cLabel for="answer" class="form-label">Answer</label>
+                  <input cFormControl id="answer" type="text" [(ngModel)]="editableQuestion.answer" name="answer" class="form-control" required>
+                </c-col>
+              </c-row>
+
+              <c-row class="mb-3 form-group" *ngFor="let option of editableQuestion.options; let i = index">
+                <c-col md="12">
+                  <label cLabel [for]="'option'+i" class="form-label">Option {{option.letter}}</label>
+                  <input cFormControl [id]="'option'+i" type="text" [(ngModel)]="option.text" [name]="'option'+i" class="form-control" required>
+                </c-col>
+              </c-row>
+
+              <div class="form-actions">
+                <button cButton color="success" (click)="saveChanges()" [disabled]="!isFormValid()" class="save-btn">
+                  Save Changes
+                </button>
+                <button cButton color="secondary" (click)="cancelEdit()" class="cancel-btn">
+                  Cancel
+                </button>
+              </div>
+            </form>
+          </c-card-body>
+        </c-card>
+      </c-card-body>
+    </c-card>
+  </c-col>
+</c-row>
