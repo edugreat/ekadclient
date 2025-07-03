@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnDestroy } from '@angular/core';
 import { ConfirmationService } from '../services/confirmation.service';
 import {
   ButtonDirective,
@@ -7,6 +7,7 @@ import {
   ModalFooterComponent,
   ModalHeaderComponent
 } from '@coreui/angular';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-confirmation',
@@ -21,22 +22,27 @@ import {
     ButtonDirective
   ]
 })
-export class ConfirmationComponent {
+export class ConfirmationComponent implements OnDestroy {
   message?: string;
   visible = false;
+  private subscription:Subscription;
   private confirmationService = inject(ConfirmationService);
 
   constructor() {
-    this.confirmationService.actionMessageConfirm$.subscribe((message) => {
+   this.subscription = this.confirmationService.actionMessageConfirm$.subscribe((message) => {
       this.message = message;
-      if (message) {
-        this.visible = true;
-      }
+       this.visible = !!message;
     });
   }
 
   confirm(response: boolean) {
     this.confirmationService.confirmationResponse(response);
     this.visible = false;
+    this.message = undefined;
+  }
+
+  ngOnDestroy(): void {
+    
+    this.subscription.unsubscribe();
   }
 }

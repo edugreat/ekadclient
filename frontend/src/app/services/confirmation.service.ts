@@ -1,35 +1,36 @@
 import { Injectable } from '@angular/core';
-import { Subject } from 'rxjs';
+import { finalize, Observable, Subject, take } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ConfirmationService {
 
-  //subject that emits confirmation messages that the user should consent to or decline, pending an action
-  private actionMessageConfirmation = new Subject<string>();
+  
+  private actionMessageConfirmSubject = new Subject<string|undefined>();
+  actionMessageConfirm$ = this.actionMessageConfirmSubject.asObservable();
 
-  //subject that emits the user response to confirmation dialog
-  private userConfirmationResponse = new Subject<boolean>();
-
-  //gets observable from the subject that subscribers can subscribe to, to receive emitted values from the actionMessageConfirmation
-  actionMessageConfirm$ = this.actionMessageConfirmation.asObservable();
-
-  //get observable from the subject that subscribers can subscribe to, to receive emitted values (such as user's confirmation response) from the userConfirmationResponse
-  userConfirmationResponse$ = this.userConfirmationResponse.asObservable();
-
+  private confirmationResponseSubject = new Subject<boolean>();
+  confirmationResponse$ = this.confirmationResponseSubject.asObservable();
   constructor() { }
 
   //emits the confirmation message
-  confirmAction(message:string){
+  confirmAction(message:string):Observable<boolean>{
 
-    this.actionMessageConfirmation.next(message);
+    this.actionMessageConfirmSubject.next(message);
+
+    return this.confirmationResponse$.pipe(
+      take(1),
+      finalize(() => this.actionMessageConfirmSubject.next(undefined))
+    );
+
+   
   }
 
   //emits user confirmation response
   confirmationResponse(response:boolean){
 
-    this.userConfirmationResponse.next(response);
+   this.confirmationResponseSubject.next(response);
 
   }
 }

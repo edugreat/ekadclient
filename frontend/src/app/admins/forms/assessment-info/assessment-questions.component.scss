@@ -15,8 +15,7 @@
   margin: 0;
 }
 
-/* Dropdown styles */
-/* Dropdown styles */
+
 .sort-dropdown {
   position: relative;
   display: inline-block;
@@ -184,12 +183,14 @@
 .edit-form {
   border: 1px solid rgba(0, 0, 0, 0.125);
   border-radius: 0.5rem;
+  background-color: #fff;
 }
 
-.edit-form .edit-header {
+.edit-header {
   background-color: #f8f9fa;
   padding: 0.75rem 1.25rem;
   border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+  font-weight: 600;
 }
 
 .edit-form .edit-body {
@@ -236,12 +237,72 @@
   margin-top: 1rem;
 }
 
+.form-actions {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+  justify-content: flex-end;
+}
+
 .update-question-form .save-btn,
 .update-question-form .cancel-btn {
   padding: 0.375rem 0.75rem;
   font-size: 0.875rem;
   line-height: 1.5;
   border-radius: 0.25rem;
+}
+
+.undo-btn {
+  // Your custom styles here
+  background-color: #dc3545; // Red color
+  border-color: #dc3545;
+  color: white;
+  
+  &:hover {
+    background-color: #c82333;
+    border-color: #bd2130;
+  }
+  
+  // If you need to override CoreUI styles
+  &.btn {
+    margin-left: 0.5rem;
+  }
+}
+
+.save-btn {
+  background-color: #28a745;
+  border-color: #28a745;
+  color: white;
+  padding: 0.5rem 1.25rem;
+  border-radius: 0.3rem;
+  transition: all 0.2s;
+}
+
+.cancel-btn {
+  background-color: #6c757d;
+  border-color: #6c757d;
+  color: white;
+  padding: 0.5rem 1.25rem;
+  border-radius: 0.3rem;
+  transition: all 0.2s;
+}
+
+.cancel-btn:hover {
+  background-color: #5a6268;
+  border-color: #545b62;
+  transform: translateY(-1px);
+}
+
+.save-btn:hover {
+  background-color: #218838;
+  border-color: #1e7e34;
+  transform: translateY(-1px);
+}
+.save-btn:disabled {
+  background-color: #6c757d;
+  border-color: #6c757d;
+  opacity: 0.65;
+  transform: none;
 }
 
 /* Pagination styles */
@@ -271,6 +332,18 @@
   border-color: #dee2e6;
 }
 
+.math-preview {
+  margin-top: 0.5rem;
+  padding: 0.5rem;
+  background-color: #f8f9fa;
+  border-radius: 0.25rem;
+  border: 1px solid #e9ecef;
+  min-height: 1.5rem;
+  word-wrap: break-word;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
 /* MathJax styles */
 [appMathJax] {
   display: inline-block;
@@ -282,6 +355,14 @@
 @media (max-width: 768px) {
   .card-header-custom {
     padding: 0.75rem;
+  }
+
+  .form-actions {
+    flex-direction: column;
+  }
+
+  .save-btn, .cancel-btn {
+    width: 100%;
   }
 
   .card-header-custom .card-title {

@@ -207,8 +207,8 @@ export class AssessmentInfoComponent {
   }
 
   delete(testId: number, testName: string) {
-    this.confirmationService.confirmAction(`Delete ${testName}?`);
-    this.confirmationService.userConfirmationResponse$.pipe(take(1)).subscribe(yes => {
+   
+    this.confirmationService.confirmAction(`Delete ${testName}?`).subscribe(yes => {
       if (yes) {
         this.deleteAssessment(testId);
       }

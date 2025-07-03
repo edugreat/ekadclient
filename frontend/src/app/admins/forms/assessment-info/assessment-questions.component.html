@@ -27,8 +27,11 @@
         </div>
 
         <!-- Error Message -->
-        <div *ngIf="errorMessage" class="alert alert-danger mb-3 error-message">
-          {{errorMessage}}
+        <div *ngIf="errorMessage" class="error-message">
+          <c-alert *ngIf="errorMessage" color="danger" class="mb-0 py-2 fade-in">
+            <svg cIcon name="cilWarning" class="me-2"></svg>
+            {{ errorMessage }}
+          </c-alert>
         </div>
 
         <!-- Questions Table -->
@@ -83,46 +86,95 @@
           </c-pagination>
         </div>
 
-        <!-- Edit Form -->
-        <c-card *ngIf="editableQuestion" class="edit-form mt-4">
-          <c-card-header class="edit-header">
-            <strong>Editing Question {{currentQuestionNumber}}</strong>
-          </c-card-header>
-          <c-card-body class="edit-body">
-            <form cForm class="update-question-form">
-              <c-row class="mb-3 form-group">
-                <c-col md="12">
-                  <label cLabel for="questionText" class="form-label">Question</label>
-                  <textarea cFormControl id="questionText" [(ngModel)]="editableQuestion.question" name="question" class="form-control" required></textarea>
-                </c-col>
-              </c-row>
+   
+<!-- Edit Form -->
+<c-card *ngIf="editableQuestion" class="edit-form mt-4">
+  <c-card-header class="edit-header">
+    <strong>Editing Question {{currentQuestionNumber}}</strong>
+  </c-card-header>
+  <c-card-body class="edit-body">
+    <form cForm [formGroup]="editForm" class="update-question-form" >
+      <!-- Question Text Field -->
+      <c-row class="mb-3 form-group">
+        <c-col md="12">
+          <label cLabel for="questionText" class="form-label">Question</label>
+          <textarea cFormControl id="questionText" 
+                  formControlName="question"
+                   name="question" 
+                   class="form-control" 
+                   
+                  >
+                </textarea>
+                <div *ngIf="editForm.get('question')?.invalid &&  (editForm.get('question')?.dirty || editForm.get('question')?.touched)" class="danger">
+                  Question is required
+                </div>
+          <div class="math-preview"  [appMathJax]="editForm.get('question')?.value"></div>
+        </c-col>
+      </c-row>
 
-              <c-row class="mb-3 form-group">
-                <c-col md="12">
-                  <label cLabel for="answer" class="form-label">Answer</label>
-                  <input cFormControl id="answer" type="text" [(ngModel)]="editableQuestion.answer" name="answer" class="form-control" required>
-                </c-col>
-              </c-row>
+      <!-- Answer Field -->
+      <c-row class="mb-3 form-group">
+        <c-col md="12">
+          <label cLabel for="answer" class="form-label">Answer</label>
+          <input cFormControl id="answer" 
+                type="text" 
+                formControlName="answer"
+                name="answer" 
+                class="form-control">
+                <div *ngIf="editForm.get('answer')?.invalid && (editForm.get('answer')?.dirty || editForm.get('answer')?.touched)"
+                class="text-danger">
+             Answer is required
+           </div>
+        </c-col>
+      </c-row>
 
-              <c-row class="mb-3 form-group" *ngFor="let option of editableQuestion.options; let i = index">
-                <c-col md="12">
-                  <label cLabel [for]="'option'+i" class="form-label">Option {{option.letter}}</label>
-                  <input cFormControl [id]="'option'+i" type="text" [(ngModel)]="option.text" [name]="'option'+i" class="form-control" required>
-                </c-col>
-              </c-row>
-
-              <div class="form-actions">
-                <button cButton color="success" (click)="saveChanges()" [disabled]="!isFormValid()" class="save-btn">
-                  Save Changes
-                </button>
-                <button cButton color="secondary" (click)="cancelEdit()" class="cancel-btn">
-                  Cancel
-                </button>
+      <!-- Options Fields -->
+      <div formArrayName="options">
+        <c-row class="mb-3 form-group" *ngFor="let option of optionsArray.controls; let i = index">
+          <c-col md="12">
+            <label cLabel [for]="'option'+i" class="form-label">
+              Option {{editForm.get(['options', i, 'letter'])?.value}}
+            </label>
+            <div [formGroupName]="i">
+              <input cFormControl [id]="'option'+i" 
+                    type="text" 
+                    formControlName="text"
+                    class="form-control">
+              <div *ngIf="optionsArray.at(i).get('text')?.invalid && (optionsArray.at(i).get('text')?.dirty || optionsArray.at(i).get('text')?.touched)"
+                   class="text-danger">
+                Option text is required
               </div>
-            </form>
-          </c-card-body>
-        </c-card>
-      </c-card-body>
-    </c-card>
-  </c-col>
-</c-row>
+              <div class="math-preview" [appMathJax]="optionsArray.at(i).get('text')?.value"></div>
+            </div>
+          </c-col>
+        </c-row>
+      </div>
+
+      <div class="form-actions">
+        <button cButton color="success" 
+                (click)="saveChanges()" 
+                [disabled]="editForm.invalid || disableSendBtn()" 
+                class="save-btn">
+          Save Changes
+        </button>
+        <button *ngIf="!showUndo()" cButton color="secondary" 
+                (click)="cancelEdit()" 
+                class="cancel-btn">
+          Cancel
+        </button>
+
+        <button *ngIf="showUndo()" 
+        cButton 
+        color="danger" 
+        cTooltip="undo changes"
+        size="sm" 
+        class="undo-btn"
+        (click)="undoChanges()">
+  <svg cIcon name="cilActionUndo" size="sm"></svg>
+</button>
+      </div>
+    </form>
+  </c-card-body>
+</c-card>
+
+<app-confirmation/>

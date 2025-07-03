@@ -17,6 +17,7 @@ import {
   cifPl,
   cifUs,
   cilAccountLogout,
+  cilActionUndo,
   cilAlignCenter,
   cilAlignLeft,
   cilAlignRight,
@@ -216,7 +217,8 @@ export const iconSubset = {
   cilCheckCircle,
   cilWarning,
   cilNoteAdd,
-  cilSortAlphaDown
+  cilSortAlphaDown,
+  cilActionUndo
   
  
  

@@ -1,3 +1,4 @@
+
 import { Directive, ElementRef, inject, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { MathJaxService } from '../services/math-jax.service';
 
