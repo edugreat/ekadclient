@@ -64,7 +64,7 @@ export class AssessmentStepperComponent implements OnInit {
 
     if(!this.taskCompletionStepper) return;
 
-    console.log('processong milestone:', milestone);
+ 
 
 
     const stepIndex = milestone - 1;

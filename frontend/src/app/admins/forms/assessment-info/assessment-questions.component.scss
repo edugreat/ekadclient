@@ -53,6 +53,10 @@
   display: none;
 }
 
+:host {
+  scroll-behavior: smooth;
+}
+
 .sort-dropdown.show .dropdown-menu {
   display: block;
 }

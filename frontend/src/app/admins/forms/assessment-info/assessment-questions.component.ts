@@ -1,10 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, Component, effect, inject, OnInit, signal } from '@angular/core';
+import { AfterViewInit, Component, effect, ElementRef, inject, OnInit, signal, ViewChild } from '@angular/core';
 import { MathJaxDirective } from '../../../util/math-jax.directive';
 import { FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AdminService} from '../../../services/admin.service';
 import { ConfirmationService } from '../../../services/confirmation.service';
-import { take } from 'rxjs';
+import {UtilService} from '../../../util/util.service'
+import { Subscription, take } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
 import { cilSortAlphaDown, cilPencil, cilTrash, cilWarning, cilActionUndo } from '@coreui/icons';
 import { IconModule } from '@coreui/icons-angular';
@@ -48,15 +49,14 @@ export class AssessmentQuestionsComponent implements OnInit, AfterViewInit {
   private confirmationService = inject(ConfirmationService);
   private activatedRoute = inject(ActivatedRoute);
   private fb = inject(FormBuilder);
-  
+  private utilService = inject(UtilService);
+  private editFormSubcription?:Subscription;
+
+  @ViewChild('editFormContainer')
+  private editFormContainer?:ElementRef;
+ 
   editForm!:FormGroup;
 
-
-  
-
-
-
-  
   showUndo = signal(false);
  
   isDropdownOpen = false;
@@ -100,12 +100,34 @@ export class AssessmentQuestionsComponent implements OnInit, AfterViewInit {
 
     effect(() =>{
      if(this.testId() && this.assessmentTopic()){
+
+     
    
-      this.fetchQuestions(this.testId()!)
-      
+      this.fetchQuestions(this.testId()!);
+
      }
 
     })
+
+    this.utilService.scrollQuestion$.subscribe(scroll => {
+
+      setTimeout(() => {
+
+        if(scroll && this.editFormContainer){
+
+          this.utilService.scrollIntoView(this.editFormContainer.nativeElement);
+        }
+        
+      }, 100);
+
+      setTimeout(() => {
+
+        this.utilService.scrollQuestion(false);
+        
+      }, 102);
+    })
+
+    
 
     this.activatedRoute.params.subscribe(params => {
 
@@ -145,9 +167,6 @@ export class AssessmentQuestionsComponent implements OnInit, AfterViewInit {
     });
 
    
-    // this.editForm.valueChanges.subscribe(() => {
-    //   this.showUndo.set(true);
-    // });
   }
 
   get optionsArray():FormArray{
@@ -185,7 +204,13 @@ export class AssessmentQuestionsComponent implements OnInit, AfterViewInit {
       complete:() => {
         this.totalQuestions = this.questions.length;
         this.setPagination();
-        this.busyState.set('nil')
+        this.busyState.set('nil');
+
+        setTimeout(() => {
+
+         this.utilService.scrollAssessmentInfo(true);
+          
+        }, 100);
       
 
       }
@@ -219,10 +244,6 @@ export class AssessmentQuestionsComponent implements OnInit, AfterViewInit {
 
   undoChanges(){
 
-  //   this.showUndo.set(false)
-
-  //  this.editableQuestion = undefined;
-  //  this.editForm.reset();
   this.resetObjects()
 
   }
@@ -279,6 +300,9 @@ export class AssessmentQuestionsComponent implements OnInit, AfterViewInit {
     
       editQuestion(id:number) {
 
+        // clear' previous subscription;
+       this.editFormSubcription?.unsubscribe();
+
 
          // kick in and check for uncommited changes
         if(this.previousObjState){
@@ -288,7 +312,7 @@ export class AssessmentQuestionsComponent implements OnInit, AfterViewInit {
 
         const hasChanged = !isEqual(this.previousObjState, changes);
 
-        if(hasChanged){
+        if(this.showUndo() && hasChanged){
 
           this.confirmationService.confirmAction('save changes?').subscribe(save => {
           if(save){
@@ -296,13 +320,16 @@ export class AssessmentQuestionsComponent implements OnInit, AfterViewInit {
             this.saveChangesToDatabase()
 
 
+          }else{
+
+            this.cancelEdit()
           }
 
         })
 
-       
+       return;
         }
-        return;
+        
 
         }
       
@@ -338,9 +365,9 @@ export class AssessmentQuestionsComponent implements OnInit, AfterViewInit {
           }));
         });
 
-        this.editForm.valueChanges.pipe(take(1)).subscribe(v => {
+       this.editFormSubcription =  this.editForm.valueChanges.pipe(take(1)).subscribe(v => {
 
-          console.log('form value changes')
+         
 
           this.showUndo.set(true)
         })
@@ -348,13 +375,17 @@ export class AssessmentQuestionsComponent implements OnInit, AfterViewInit {
 
         this.editableQuestion = question;
 
+        this.utilService.scrollQuestion(true);
+
+    
+
     
       }        
         }
     
         cancelEdit() {
 
-          Object.assign(this.questions.filter(q => q.id === this.idOfEditableQuestion)[0], this.previousObjState);
+          Object.assign(this.paginatedQuestions!.filter(q => q.id === this.idOfEditableQuestion)[0], this.previousObjState);
           
             this.resetObjects();
           
@@ -368,6 +399,7 @@ export class AssessmentQuestionsComponent implements OnInit, AfterViewInit {
     this.previousObjState = undefined;
     this.editForm.reset();
     this.showUndo.set(false);
+   
     this.editableQuestion = undefined;
     this.idOfEditableQuestion = undefined;
   }
@@ -462,6 +494,25 @@ export class AssessmentQuestionsComponent implements OnInit, AfterViewInit {
         }
       });
     }
+  }
+
+
+  
+  private scrollToElement(element:HTMLElement){
+
+    try {
+
+      element.scrollIntoView({
+        behavior:'smooth',block:'end'
+      })
+      
+    } catch (error) {
+
+      element.scrollIntoView()
+      
+    }
+
+
   }
 }
 

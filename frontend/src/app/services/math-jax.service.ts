@@ -37,7 +37,7 @@ export class MathJaxService {
 
         window.MathJax.startup.promise.then(() => {
 
-          console.log('MathJax initialized');
+         
         })
       };
       document.head.appendChild(script);

@@ -40,7 +40,7 @@ export class ListGroupsComponent {
   }
 
   logValue() {
-    console.log(this.checkBoxes.value);
+   
     this.checkBoxes.reset();
   }
 

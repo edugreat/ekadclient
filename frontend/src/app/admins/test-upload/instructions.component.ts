@@ -161,7 +161,7 @@ export class InstructionsComponent {
       this.busyState.set('busy')
 
 
-      console.log('uploading instructions')
+      
 
       this.adminService.uploadInstructions(this.instructionForm.value, this.uploadedAssessmentId)
       .subscribe({
@@ -169,13 +169,13 @@ export class InstructionsComponent {
         next:(response:HttpResponse<number>) =>{
        if(response.status === HttpStatusCode.Ok){
 
-        console.log('upload successful')
+       
         
         this.adminService.setTaskMilestone(2);
 
         // sets the boolean flag to true so admin can proceed with sending notification
         this.hasUploadedInstructions.set(true);
-       }else console.log('http status:',response.status)
+       }
         },
         error:(err) => {
 
@@ -186,8 +186,7 @@ export class InstructionsComponent {
         }
       })
 
-    }else console.log(`missing data form: ${JSON.stringify(this.instructionForm ? true : false)} assessment id:${JSON.stringify(this.uploadedAssessmentId ? true : false)}`)
-
+    }
    
    
     }

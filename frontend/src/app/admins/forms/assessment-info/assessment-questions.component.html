@@ -35,7 +35,7 @@
         </div>
 
         <!-- Questions Table -->
-        <div *ngIf="busyState() === 'nil'" class="table-container">
+        <div  *ngIf="busyState() === 'nil'" class="table-container">
           <div class="table-responsive">
             <table cTable class="question-table mb-4">
               <thead>
@@ -86,8 +86,13 @@
           </c-pagination>
         </div>
 
+      
+
+        
+
    
 <!-- Edit Form -->
+ <div #editFormContainer>
 <c-card *ngIf="editableQuestion" class="edit-form mt-4">
   <c-card-header class="edit-header">
     <strong>Editing Question {{currentQuestionNumber}}</strong>
@@ -176,5 +181,6 @@
     </form>
   </c-card-body>
 </c-card>
+</div>
 
 <app-confirmation/>

@@ -81,10 +81,7 @@ export class CarouselsComponent {
     }];
   }
 
-  onItemChange($event: any): void {
-    // console.log('Carousel onItemChange', $event);
-  }
-
+ 
   readonly interval = signal(5000);
 
   toggleInterval() {

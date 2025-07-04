@@ -1,8 +1,8 @@
-import { Component, computed, effect, inject, signal, WritableSignal } from '@angular/core';
+import { Component, computed, effect, ElementRef, inject, OnDestroy, OnInit, signal, ViewChild, WritableSignal } from '@angular/core';
 import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
 import { AdminService } from '../../../services/admin.service';
 import { ConfirmationService } from "../../../services/confirmation.service";
-import { take } from 'rxjs';
+import { Subscription, take } from 'rxjs';
 import {
   ButtonDirective,
   CardBodyComponent,
@@ -31,6 +31,7 @@ import { FormsModule } from '@angular/forms';
 import { ConfirmationComponent } from '../../../util/confirmation.component';
 import { cilSortAlphaDown} from '@coreui/icons';
 import { IconModule } from '@coreui/icons-angular';
+import { UtilService } from '../../../util/util.service';
 
 @Component({
   selector: 'app-assessment-info',
@@ -69,12 +70,16 @@ DropdownItemDirective,
    
   ]
 })
-export class AssessmentInfoComponent {
+export class AssessmentInfoComponent implements OnInit, OnDestroy {
   private activatedRoute = inject(ActivatedRoute);
   private adminService = inject(AdminService);
   private router = inject(Router);
   private confirmationService = inject(ConfirmationService);
+  private utilService = inject(UtilService);
+  @ViewChild('routerOutlet')
+  private routerOutlet?:ElementRef;
 
+  private scrollSub?:Subscription;
   cilSortAlphaDown = cilSortAlphaDown
 
 
@@ -105,6 +110,9 @@ export class AssessmentInfoComponent {
   
     effect(() => {
       if (this.categoryId()) {
+
+
+        
         this.fetchAssessments(this.categoryId()!);
       }
     });
@@ -112,8 +120,34 @@ export class AssessmentInfoComponent {
     this.activatedRoute.params.subscribe(params => {
       this.categoryId.set(Number(params['categoryId']));
 
+     
+
       this.currentCategoryId = Number(params['categoryId'])
     });
+
+    
+    
+  }
+
+  ngOnInit(): void {
+
+    this.scrollSub = this.utilService.scrollAssessmentInfo$.subscribe(scroll => {
+
+     setTimeout(() => {
+       if(scroll && this.routerOutlet){
+
+        this.utilService.scrollIntoView(this.routerOutlet.nativeElement);
+      
+      }
+     }, 100);
+    })
+
+  
+    
+  }
+
+  ngOnDestroy(): void {
+    this.scrollSub?.unsubscribe();
   }
 
   private fetchAssessments(categoryId: number) {
@@ -215,6 +249,8 @@ export class AssessmentInfoComponent {
     });
   }
 
+  
+
   private deleteAssessment(testId: number) {
     this.adminService.deleteAssessment(testId).subscribe({
       error: (error) => this.router.navigate(['/error', error.error]),
@@ -224,7 +260,7 @@ export class AssessmentInfoComponent {
 
   sortBy(criteria: string) {
 
-    console.log(`criteria ${criteria}`)
+   
    
     this.assessments.sort((a, b) => {
 
@@ -240,6 +276,9 @@ export class AssessmentInfoComponent {
     this.currentPage.set(1); // Reset to first page when sorting
     this.updatePagination();
   }
+
+  
+
 }
 
 interface AssessmentInfo {
