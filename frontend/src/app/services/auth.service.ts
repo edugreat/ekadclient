@@ -31,7 +31,7 @@ export class AuthService {
   // This flag is used to stop anyother requests from proceeding while refresh token process is ongoing, until it completes
   private _refreshTokenInProcess = false;
 
-  public loadRsources = signal(true);
+  public loadResources = signal(true);
  
   constructor() {
    
@@ -77,7 +77,7 @@ export class AuthService {
 
   public setReloadState(reload:boolean){
 
-    this.loadRsources.set(reload)
+    this.loadResources.set(reload)
 
   }
 

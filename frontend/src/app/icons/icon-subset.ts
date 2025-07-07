@@ -28,6 +28,7 @@ import {
   cilBasket,
   cilBell,
   cilBold,
+  cilBook,
   cilBookmark,
   cilCalculator,
   cilCalendar,
@@ -140,6 +141,7 @@ export const iconSubset = {
   cilBell,
   cilBold,
   cilBookmark,
+  cilBook,
   cilCalculator,
   cilCalendar,
   cilChart,
@@ -257,6 +259,7 @@ export enum IconSubset {
   cilBasket = 'cilBasket',
   cilBell = 'cilBell',
   cilBold = 'cilBold',
+  cilBook = 'cilBook',
   cilBookmark = 'cilBookmark',
   
   cilCalculator = 'cilCalculator',

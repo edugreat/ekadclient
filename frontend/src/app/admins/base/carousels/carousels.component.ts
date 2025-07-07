@@ -87,4 +87,8 @@ export class CarouselsComponent {
   toggleInterval() {
     this.interval.update((value) => value ? 0 : 2500);
   }
+
+   onItemChange($event: any): void {
+    // console.log('Carousel onItemChange', $event);
+  }
 }

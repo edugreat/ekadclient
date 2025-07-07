@@ -50,7 +50,7 @@
               <tbody>
                 <tr *ngFor="let question of paginatedQuestions" class="question-row">
                   <td class="question-number">{{question.questionNumber}}</td>
-                  <td class="question-text" [appMathJax]="question.question"></td>
+                  <td class="question-text" [appMathJax]="question.question!"></td>
                   <td class="question-answer">{{question.answer}}</td>
                   <td class="question-options">
                     <ol class="options-list">
@@ -59,10 +59,10 @@
                   </td>
                   <td class="question-actions">
                     <div class="action-buttons">
-                      <button cButton color="primary" size="sm" (click)="editQuestion(question.id)" class="action-btn edit-btn">
+                      <button cButton color="primary" size="sm" (click)="editQuestion(question.id!)" class="action-btn edit-btn">
                         <svg cIcon name="cilPencil" size="sm"></svg>
                       </button>
-                      <button cButton color="danger" size="sm" (click)="deleteQuestion(question.questionNumber, question.id)" class="action-btn delete-btn">
+                      <button cButton color="danger" size="sm" (click)="deleteQuestion(question.questionNumber!, question.id!)" class="action-btn delete-btn">
                         <svg cIcon name="cilTrash" size="sm"></svg>
                       </button>
                     </div>

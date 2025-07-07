@@ -209,7 +209,7 @@
             <div class="list-group-item" *ngFor="let question of testDTO!.questions">
               <strong>Q{{question.questionNumber}}:</strong> {{question.question}}
               <div cBadge color="success" class="float-end">
-                Options: {{question.options.length}}
+                Options: {{question.options ? question.options.length : ''}}
               </div>
             </div>
           </div>

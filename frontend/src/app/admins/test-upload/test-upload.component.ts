@@ -604,16 +604,20 @@ export class UploadTestComponent implements OnInit, OnDestroy {
     const chosenOption = this.optionInput.value;
 
     //checks if the testDto has yet to be initialized
-    if (!this.testDTO) {
+
+   const text = this.currentOption().text;
+   const letter = this.currentOption().letter;
+    let currentOption: { text: string ; letter: string  } = { text: text!, letter:letter!}
+    if (!this.testDTO ) {
       //get the current question
       let currentQuestion: Question = this.currentQuestion(currentNumber);
-
+ 
       //get the option for the current question
-      let currentOption: { text: string | undefined; letter: string | undefined } = this.currentOption();
+     
       //add current option to an array of options
 
       // push option to the current question
-      currentQuestion.options.push(currentOption);
+      currentQuestion.options?.push(currentOption);
 
       //Initialize testDto
       this.testDTO = {
@@ -630,12 +634,12 @@ export class UploadTestComponent implements OnInit, OnDestroy {
       this.optionCounter.update(() => this.optionCounter() + 1);
     } else {
       //check if the question number already exists
-      const exists = this.testDTO.questions?.some(
+      const exists = this.testDTO.questions.some(
         (question) => question.questionNumber === currentNumber
       );
-      if (exists) {
+      if (exists && currentOption) {
         //get the option
-        const option = this.currentOption();
+        
 
         //get the question whose options are to be updated
         const question: Question = this.testDTO.questions.find(
@@ -646,7 +650,7 @@ export class UploadTestComponent implements OnInit, OnDestroy {
         const index = this.testDTO.questions.findIndex((q) => q === question);
 
         //  push option to question's options array
-        question.options.push(option);
+        question.options?.push(currentOption);
 
         //  updates testDto object
         this.testDTO.questions.splice(index, 1, question);
@@ -660,7 +664,7 @@ export class UploadTestComponent implements OnInit, OnDestroy {
         //get option
         const option = this.currentOption();
 
-        currentQuestion.options.push(option);
+        currentQuestion.options?.push(option);
 
         this.testDTO.questions.push(currentQuestion);
 

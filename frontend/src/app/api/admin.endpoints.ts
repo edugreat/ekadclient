@@ -18,8 +18,8 @@ export class AdminEndpoints {
   
   // Topic Management
    readonly topics = `${this.baseUrl}/admins/topics`;
-   readonly editTopic = `${this.baseUrl}/admins/edit/topic`;
-   readonly deleteTopic = `${this.baseUrl}/admins/del/topic`;
+  //  readonly editTopic = `${this.baseUrl}/admins/edit/topic`;
+  //  readonly deleteTopic = `${this.baseUrl}/admins/del/topic`;
   
   // Subject Management
    readonly subjects = `${this.baseUrl}/admins/subjects`;

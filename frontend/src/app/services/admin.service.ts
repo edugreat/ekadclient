@@ -1,7 +1,8 @@
 import { HttpClient, HttpResponse, HttpStatusCode} from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { BehaviorSubject, map, Observable } from 'rxjs';
+import { BehaviorSubject, catchError, map, Observable, of, tap } from 'rxjs';
 import { ApiEndpoints } from '../api/api-endpoints';
+import { ApiResponseObject } from '../util/api.response';
 
 @Injectable({
   providedIn: 'root'
@@ -21,6 +22,12 @@ export class AdminService {
 
   private apiEndpoints = inject(ApiEndpoints)
  private http = inject(HttpClient);
+ private assessmentTopicCache:AssessmentTopic[] = [];
+ private assessmentCategoriesCache?:AssessmentCategory;
+ private studentListCache?:StudentInfo;
+ private subjectObjectCache?:SubjectObject;
+ private studenterformanceCache?:StudentPerformanceInfo;
+ private assessmentQuestionCache:Question[] = []
 
 
 
@@ -34,14 +41,23 @@ export class AdminService {
     return this.http.get<CategoryObject>(this.apiEndpoints.learning.levels);
   }
 
-  //uses the url 'subjects.href' url returned from the call the fetchCategory to fetch all the subjects in that category
+  //uses the url 'subjects.href' url returned from the call to the fetchCategory to fetch all the subjects in that category
   fetchSubjects(url:string):Observable<any>{
 
+    if(this.subjectObjectCache){
+
+      return of(this.subjectObjectCache)
+    }
     return this.http.get<SubjectObject>(url);
   }
 
   // fetches a paginated view of student list sorting the list by student's first name and last name all in ascending order 
   fetchStudentList(page:number, pageSize:number):Observable<StudentInfo>{
+
+    if(this.studentListCache){
+
+      return of(this.studentListCache)
+    }
 
     return this.http.get<StudentInfo>(`${this.apiEndpoints.learning.students}?page=${page}&size=${pageSize}&sort=firstName,asc&sort=lastName,asc`)
     
@@ -70,6 +86,8 @@ export class AdminService {
   // Service for disabling student's account
   disableStudentAccount(studentId:number):Observable<HttpResponse<number>>{
 
+
+
     return this.http.patch<HttpStatusCode>(`${this.apiEndpoints.admin.disable}`, {'studentId':studentId},{observe:'response'});
 
   }
@@ -84,6 +102,11 @@ export class AdminService {
 
 // fetches student's assessment performance information for the student with the given student id
 fetchStudentPerformanceInfo(studentId:number):Observable<StudentPerformanceInfo>{
+
+  if(this.studenterformanceCache){
+
+    return of(this.studenterformanceCache);
+  }
 
   return this.http.get<StudentPerformanceInfo>(`${this.apiEndpoints.learning.students}/${studentId}/studentTests`)
 
@@ -111,25 +134,38 @@ public fetchAssessmentInfo(categoryId:number):Observable<AssessmentInfo>{
 // fetches all assessment categories from the server
 public fetchAssessmentCategories(page?:number, pageSize?:number):Observable<AssessmentCategory>{
 
+  if(this.assessmentCategoriesCache){
+
+    return of(this.assessmentCategoriesCache)
+  }
+
   if(page && pageSize) return this.http.get<AssessmentCategory>(`${this.apiEndpoints.learning.levels}?page=${page}&size=${pageSize}&sort=firstName,asc&sort=lastName,asc`);
 
   return this.http.get<AssessmentCategory>(`${this.apiEndpoints.learning.levels}?sort=category,asc`);
 }
 
 // method that fetches all the questions for the given test id
-public fetchQuestionsForTestId(testId:number):Observable<any>{
+public fetchQuestionsForTestId(testId:number):Observable<Question[]>{
 
-  return this.http.get<any>(`${this.apiEndpoints.learning.tests}/${testId}/questions`)
+  if(this.assessmentQuestionCache.length){
+
+    return of(this.assessmentQuestionCache)
+  }
+  return this.http.get<any>(`${this.apiEndpoints.learning.tests}/${testId}/questions`).pipe(
+    map((data) => data._embedded.questions as Question[])
+  )
 }
 
 public deleteStudent(studentId:number):Observable<HttpResponse<number>>{
 
-  
+  this.studentListCache = undefined;
 
   return this.http.delete<HttpStatusCode>(`${this.apiEndpoints.admin.delete}?studentId=${studentId}`,{observe:'response'});
 }
 
 updateQuestions(questions:any, testId:number):Observable<HttpResponse<number>>{
+
+  this.assessmentQuestionCache = []
 
 
   return this.http.put<HttpStatusCode>(`${this.apiEndpoints.admin.updateQuestion}?testId=${testId}`, questions, {observe:'response'})
@@ -143,6 +179,7 @@ modifyAssessment(modifying:{topic:string, duration:number}, assessmentId:number)
 
  deleteQuestion(testId:number, questionId:number):Observable<HttpResponse<number>>{
 
+  this.assessmentQuestionCache = []
 
   return this.http.delete<HttpStatusCode>(`${this.apiEndpoints.admin.deleteQuestion}?testId=${testId}&questionId=${questionId}`,{observe:'response'});
  }
@@ -155,30 +192,50 @@ modifyAssessment(modifying:{topic:string, duration:number}, assessmentId:number)
 }
 
 // calls the server endpoint to return all assessment topics for editing or deletion purpose
-assessmentTopics():Observable<{[key:string]:Array<string>}>{
+ getAssessmentTopics(categoryId: number): Observable<AssessmentTopic[]> {
 
-  return this.http.get<{[key:string]:Array<string>}>(`${this.apiEndpoints.admin.topics}`);
-}
+  if(this.assessmentTopicCache.length){
+
+    return of(this.assessmentTopicCache);
+  }
+    return this.http
+      .get<ApiResponseObject<AssessmentTopic[]>>(`${this.apiEndpoints.admin.topics}?category=${categoryId}`)
+      .pipe(
+       
+        map((response) => {
+          if (!response.success || !response.data) {
+            throw new Error(response.error || 'Unknown error');
+          }
+          return response.data;
+        }),
+        catchError((err) => {
+          throw new Error(err.message || 'Failed to fetch topics');
+        })
+      );
+  }
 
 // service that calls the server endpoint to update an assessment topic. 
 // object passed to the method is a key-value object where the key is the oldValue used to uniquely retrieve the assessment topic from the database, and the value is new value used to update the topic
-updateAssessementTopic(keyValueObj: any, category: string):Observable<HttpResponse<number>> {
+updateAssessementTopic(keyValueObj:{assessmentId:number, categoryId:number, currentName:string}):Observable<HttpResponse<number>> {
 
- 
-  
-  return this.http.patch<HttpStatusCode>(`${this.apiEndpoints.admin.topics}?category=${category}`, keyValueObj,{observe:'response'})
+this.assessmentTopicCache = [];
+this.assessmentQuestionCache = [];
+  return this.http.patch<HttpStatusCode>(`${this.apiEndpoints.admin.topics}`, keyValueObj,{observe:'response'})
 }
 
 
-deleteAssessmentTopic(category: string, topic: string):Observable<HttpResponse<number>> {
+deleteAssessmentTopic(assessmentId:number, categoryId:number):Observable<HttpResponse<number>> {
 
-  return this.http.delete<HttpStatusCode>(`${this.apiEndpoints.admin.deleteTopic}?category=${category}&topic=${topic}`,{observe:'response'})
+  this.assessmentTopicCache = [];
+  return this.http.delete<HttpStatusCode>(`${this.apiEndpoints.admin.topics}?category=${categoryId}&assessmentId=${assessmentId}`,{observe:'response'})
   
 }
 
 // service that calls the server endpoint to retrieve all assessment subject names in a key-value object,
 // where key is the category assessment belongs to and value is a list of subject names under the category
 assessmentSubjects():Observable<{[key:string]:Array<string>}> {
+
+
 
   return this.http.get<{[key:string]:Array<string>}>(`${this.apiEndpoints.admin.subjects}`)
  
@@ -197,8 +254,10 @@ deleteSubject(category:string, subjectName:string):Observable<HttpResponse<numbe
   return this.http.delete<HttpStatusCode>(`${this.apiEndpoints.admin.deleteSubject}?category=${category}&subjectName=${subjectName}`, {observe:'response'});
 }
 
-// communicates to the backend to update name of the category rreferenced by 'previousName' with 'currentName'
+// communicates to the backend to update name of the category referenced by 'previousName' with 'currentName'
 updateCategoryName(currentName:string, previousName: string):Observable<HttpResponse<number>> {
+ 
+  this.assessmentCategoriesCache = undefined;
   
   return this.http.patch<HttpStatusCode>(`${this.apiEndpoints.admin.updateCategory}?previousName=${previousName}`, currentName, {observe:'response'});
 
@@ -215,6 +274,7 @@ uploadAssessmentCategories(categories:Category[]):Observable<HttpResponse<number
 // communicates to the server to delete the assessment category referenced by 'category'
 deleteCategory(category: number):Observable<HttpResponse<number>> {
   
+  this.assessmentCategoriesCache = undefined;
   return this.http.delete<HttpStatusCode>(`${this.apiEndpoints.admin.deleteCategory}?category=${category}`, {observe:'response'})
 
 }
@@ -361,13 +421,14 @@ export type NotificationDTO = {
 
   //Declares an object of type Question
 export type Question = {
-  questionNumber: number | undefined;
-  question: string | undefined;
-  answer: string | undefined;
-  options:Array<{ text: string | undefined; letter: string | undefined }>
-};
+  id?:number,
+  questionNumber:number|undefined,
+  question:string|undefined,
+  answer:string|undefined,
+  options:Array<{text:string|undefined,letter:string|undefined}>
+}
 
-//export type Option = { text: string | undefined; letter: string | undefined };
+
 
 //Declares an object of type TestDTO that is sent to the server
 export type TestDTO = {
@@ -385,4 +446,10 @@ export type Category = {
 
   id:number,
   category:string
+}
+
+export type AssessmentTopic = {
+
+    assessmentId:number,
+    topic: string
 }

@@ -58,14 +58,14 @@ export class AppComponent implements OnInit {
       this.authService.getCachedUser(userId).subscribe({
         error:() => {
 
-          this.authService.setReloadState(true);
+          //this.authService.setReloadState(true);
 
-          sessionStorage.clear();
+           sessionStorage.clear();
         },
 
         complete:() => {
           sessionStorage.clear();
-          this.authService.setReloadState(true);
+         this.authService.setReloadState(true);
         }
       })
     }
@@ -95,6 +95,7 @@ export class AppComponent implements OnInit {
   beforeUnload($event:any){
 
    if(this.currentUser()){
+    console.log('before unload')
     this.authService.setReloadState(false)
 
     sessionStorage.setItem('userId',String(this.currentUser()!.id));

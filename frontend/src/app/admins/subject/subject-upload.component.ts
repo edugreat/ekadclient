@@ -97,7 +97,7 @@ export class SubjectUploadComponent implements OnInit {
          
   effect(() => {
 
-    if(this.authService.loadRsources()&& this.authService.isAdmin){
+    if(this.authService.loadResources()&& this.authService.isAdmin){
 
         this.fetchExistingCategories()
       

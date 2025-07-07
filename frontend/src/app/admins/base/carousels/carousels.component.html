@@ -7,7 +7,7 @@
       <c-card-body>
         <p class="text-body-secondary small">Here’s a carousel with slides</p>
         <app-docs-example href="components/carousel">
-          <c-carousel (itemChange)="onItemChange($event)" [interval]="7000">
+          <c-carousel  [interval]="7000">
             <c-carousel-inner>
               @for (slide of slides[0]; track slide.src) {
                 <c-carousel-item>

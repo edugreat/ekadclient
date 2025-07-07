@@ -140,9 +140,15 @@ export const navItems: INavData[] = [
     children: [
       {
         name: 'View Assessments',
-        url: '/assessments/view',
+        url: '/assessments',
         icon: 'nav-icon-bullet'
       },
+
+      {
+        name:'Assessment Topics',
+        url:'/assessments/topics/',
+        icon:'nav-icon-bullet'
+      }
       // {
       //   name: 'Select',
       //   url: '/forms/select',

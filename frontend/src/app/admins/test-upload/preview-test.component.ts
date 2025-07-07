@@ -156,7 +156,11 @@ export class PreviewTestComponent implements OnInit, OnDestroy {
 
 
 
-    question.options.forEach(option => (questionGroup.get('options') as FormArray).push(this.createOptions(option)));
+    question.options.forEach(option => {
+      if(option){
+        (questionGroup.get('options') as FormArray).push(this.createOptions(option))
+      }
+    });
 
     return questionGroup;
 
@@ -167,8 +171,8 @@ export class PreviewTestComponent implements OnInit, OnDestroy {
   private createOptions(option: Option): FormGroup {
 
     return this.fb.group({
-      text: new FormControl<string | undefined>({ value: option.text, disabled: true }, { nonNullable: true, validators: Validators.required }),
-      letter: new FormControl<string | undefined>({ value: option.letter, disabled: true }, { nonNullable: true, validators: Validators.required })
+      text: new FormControl<string | undefined>({ value: option?.text, disabled: true }, { nonNullable: true, validators: Validators.required }),
+      letter: new FormControl<string | undefined>({ value: option?.letter, disabled: true }, { nonNullable: true, validators: Validators.required })
     })
 
 

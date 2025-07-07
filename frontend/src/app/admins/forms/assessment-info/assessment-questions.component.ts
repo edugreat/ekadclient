@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { AfterViewInit, Component, effect, ElementRef, inject, OnInit, signal, ViewChild } from '@angular/core';
 import { MathJaxDirective } from '../../../util/math-jax.directive';
 import { FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { AdminService} from '../../../services/admin.service';
+import { AdminService, Question} from '../../../services/admin.service';
 import { ConfirmationService } from '../../../services/confirmation.service';
 import {UtilService} from '../../../util/util.service'
 import { Subscription, take } from 'rxjs';
@@ -187,14 +187,7 @@ export class AssessmentQuestionsComponent implements OnInit, AfterViewInit {
     .subscribe({
       next:(data) =>{
 
-        this.questions = data._embedded.questions.map((question: { id: any; questionNumber: any; question: any; answer: any; options: any; }) => ({
-
-          id:question.id,
-          questionNumber:question.questionNumber,
-          question:question.question,
-          answer:question.answer,
-          options:question.options
-        }))
+        this.questions = data;
       },
 
       error:(error:HttpErrorResponse) => {
@@ -272,9 +265,9 @@ export class AssessmentQuestionsComponent implements OnInit, AfterViewInit {
       isFormValid(): boolean {
         if (!this.editableQuestion) return false;
         
-        const hasEmptyQuestion = !this.editableQuestion.question.trim();
-        const hasEmptyAnswer = !this.editableQuestion.answer.trim();
-        const hasEmptyOptions = this.editableQuestion.options.some(opt => !opt.text.trim());
+        const hasEmptyQuestion = !this.editableQuestion.question?.trim();
+        const hasEmptyAnswer = !this.editableQuestion.answer?.trim();
+        const hasEmptyOptions = this.editableQuestion.options?.some(opt => !opt?.text?.trim());
         
         return !hasEmptyQuestion && !hasEmptyAnswer && !hasEmptyOptions;
       }
@@ -284,11 +277,11 @@ export class AssessmentQuestionsComponent implements OnInit, AfterViewInit {
         this.questions = [...this.questions].sort((a, b) => {
           switch(criteria) {
             case 'questionNumber': 
-              return a.questionNumber - b.questionNumber;
+              return  a.questionNumber! - b.questionNumber!;
             case 'question':
-              return a.question.localeCompare(b.question);
+              return a.question!.localeCompare(b.question!);
             case 'answer':
-              return a.answer.localeCompare(b.answer);
+              return a.answer!.localeCompare(b.answer!);
             default:
               return 0;
           }
@@ -356,12 +349,12 @@ export class AssessmentQuestionsComponent implements OnInit, AfterViewInit {
         });
 
         // add options
-        question.options.forEach(option => {
+        question.options?.forEach(option => {
 
           this.optionsArray.push(this.fb.group({
 
-            letter:[option.letter],
-            text:[option.text, Validators.required]
+            letter:[option?.letter],
+            text:[option?.text, Validators.required]
           }));
         });
 
@@ -428,7 +421,9 @@ export class AssessmentQuestionsComponent implements OnInit, AfterViewInit {
   
               complete:() => {
   
-                this.fetchQuestions(this.testId()!)
+                this.errorMessage = undefined;
+                this.fetchQuestions(this.testId()!);
+
               }
             })
            }
@@ -516,11 +511,3 @@ export class AssessmentQuestionsComponent implements OnInit, AfterViewInit {
   }
 }
 
-type Question = {
-
-  id:number,
-  questionNumber:number,
-  question:string,
-  answer:string,
-  options:Array<{text:string,letter:string}>
-}

@@ -15,6 +15,24 @@ export const routes: Routes = [
       //   pathMatch: 'full'
       // },
 
+        {
+       path: 'topics',
+       loadComponent:() => import('./assessment-topics/assessment-topics.component').then(m => m.AssessmentTopicsComponent),
+
+       data:{
+        title: 'Assessments Topics'
+       }
+      },
+
+        {
+       path: 'topics/:categoryId',
+       loadComponent:() => import('./assessment-topics/assessment-topics.component').then(m => m.AssessmentTopicsComponent),
+
+       data:{
+        title: 'Assessments Topics'
+       }
+      },
+
       {
         path: ':categoryId',
        
@@ -22,29 +40,17 @@ export const routes: Routes = [
      
       },
 
-      {
-       path: 'page',
-       loadComponent:() => import('./assessments/assessment-view.component').then(m => AssessmentViewComponent),
+     
 
-       data:{
-        title: 'Assessments'
-       }
-      },
-      {
-        path: 'view',
-        loadComponent: () => import('./assessments/assessment-view.component').then(m => m.AssessmentViewComponent),
-        data: {
-          title: 'View Assessments'
-        }
-      },
+     
+      // {
+      //   path: 'view',
+      //   loadComponent: () => import('./assessments/assessment-view.component').then(m => m.AssessmentViewComponent),
+      //   data: {
+      //     title: 'View Assessments'
+      //   }
+      // },
     
-      {
-        path: 'checks-radios',
-        loadComponent: () => import('./checks-radios/checks-radios.component').then(m => m.ChecksRadiosComponent),
-        data: {
-          title: 'Checks & Radios'
-        }
-      },
       {
         path: 'range',
         loadComponent: () => import('./ranges/ranges.component').then(m => m.RangesComponent),
@@ -81,11 +87,13 @@ export const routes: Routes = [
         }
       },
 
-      {
-        path:'**',
-        redirectTo:'page'
+      // {
+      //   path:'**',
+      //   redirectTo:'page'
         
-      }
+      // }
     ]
-  }
+  },
+
+
 ];

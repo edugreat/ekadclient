@@ -34,6 +34,7 @@ export const routes: Routes = [
         path: 'assessments',
         loadChildren: () => import('./admins/forms/routes').then((m) => m.routes)
       },
+     
       {
         path: 'icons',
         loadChildren: () => import('./admins/icons/routes').then((m) => m.routes)
