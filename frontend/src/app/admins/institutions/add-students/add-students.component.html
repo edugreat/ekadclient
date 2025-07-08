@@ -1,0 +1,145 @@
+<div class="container mt-4">
+  <!-- Toast Notifications -->
+  <c-toaster position="top-end">
+    <c-toast [visible]="showSuccessToast" color="success" [autohide]="true" [delay]="5000">
+      <c-toast-header class="d-flex justify-content-between">
+        <strong>Success!</strong>
+        <button (click)="showSuccessToast = false" class="btn-close"></button>
+      </c-toast-header>
+      <c-toast-body>
+        <c-icon name="cilCheckCircle" class="me-2"></c-icon>
+        Students added successfully!
+      </c-toast-body>
+    </c-toast>
+
+    <c-toast [visible]="showErrorToast" color="danger" [autohide]="true" [delay]="8000">
+      <c-toast-header class="d-flex justify-content-between">
+        <strong>Error</strong>
+        <button (click)="showErrorToast = false" class="btn-close"></button>
+      </c-toast-header>
+      <c-toast-body>
+        <c-icon name="cilWarning" class="me-2"></c-icon>
+        {{ errorMessage }}
+      </c-toast-body>
+    </c-toast>
+  </c-toaster>
+
+  <!-- Main Content -->
+  <c-row class="justify-content-center">
+    <c-col md="10" lg="8" xl="6">
+      <c-card>
+        <c-card-header class="text-center py-4">
+          <c-icon name="cilUserFollow" class="header-icon mb-3"></c-icon>
+          <h3>Add Student Records</h3>
+          <p class="text-muted mb-0">Add students to your institution</p>
+        </c-card-header>
+
+        <c-card-body class="p-4 p-md-5">
+          <div *ngIf="errorMessage" class="alert alert-danger mb-4">
+            {{ errorMessage }}
+          </div>
+
+          <div *ngIf="infoMessage" class="alert alert-info mb-4">
+            {{ infoMessage }}
+            <a [routerLink]="['/register']" class="alert-link">Register an institution</a>
+          </div>
+
+          <div *ngIf="isLoading" class="text-center py-5">
+            <c-spinner color="primary"></c-spinner>
+            <p class="mt-2">Loading institutions...</p>
+          </div>
+
+          <form *ngIf="institutions.length && !isLoading" [formGroup]="addStudentForm" (ngSubmit)="onSubmit()">
+            <!-- Institution Selection -->
+            <div class="mb-4">
+              <mat-form-field appearance="fill" class="w-100">
+                <mat-label>Institution</mat-label>
+                <mat-select formControlName="institution" required>
+
+                  <mat-option *ngFor="let institution of institutions" [value]="institution.id">
+                    {{ institution.name }}
+                  </mat-option>
+                </mat-select>
+                <mat-error *ngIf="addStudentForm.get('institution')?.invalid">
+                  Please select an institution
+                </mat-error>
+              </mat-form-field>
+            </div>
+
+            <!-- Student Records -->
+            <div formArrayName="records" class="mb-4">
+              <div *ngFor="let record of records.controls; let i = index" [formGroupName]="i" class="record-row mb-3">
+                <div class="row g-3">
+                  <div class="col-md-5">
+                    <mat-form-field appearance="outline" class="w-100">
+                      <mat-label>Email</mat-label>
+                      <input matInput formControlName="email" type="email" placeholder="student@example.com">
+                      <mat-error *ngIf="record.get('email')?.invalid">
+                        Please enter a valid email
+                      </mat-error>
+                    </mat-form-field>
+                  </div>
+
+                  <div class="col-md-5">
+                    <mat-form-field appearance="outline" class="w-100">
+                      <mat-label>Password</mat-label>
+                      <input matInput formControlName="password" [type]="passwordVisible ? 'text' : 'password'"
+                        placeholder="Password">
+                      <button mat-icon-button matSuffix (click)="passwordVisible = !passwordVisible">
+                        <mat-icon>{{passwordVisible ? 'visibility_off' : 'visibility'}}</mat-icon>
+                      </button>
+                      <mat-error *ngIf="record.get('password')?.invalid">
+                        Password is required
+                      </mat-error>
+                    </mat-form-field>
+                  </div>
+                  <div class="col-md-2">
+                    <button cButton [disabled]="isSubmitting" color="danger" variant="outline" type="button"
+                      (click)="deleteRecord(i)" class="w-100 h-50 delete-btn">
+                      <c-icon name="cilTrash"></c-icon>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Added Students Preview -->
+            <div *ngIf="addedStudents.length > 0" class="mb-4">
+              <h5 class="mb-3">Students to be added:</h5>
+              <div class="list-group">
+                <div *ngFor="let student of addedStudents"
+                  class="list-group-item d-flex justify-content-between align-items-center">
+                  <div>
+                    <c-icon name="cilUser" class="me-2"></c-icon>
+                    {{ student.email }}
+                  </div>
+                  <span class="badge bg-success rounded-pill">Ready</span>
+                </div>
+                <button (click)="toggleClear()" *ngIf=" showClearAllBtn()" class="clear-all bg-light.bg-gradient">
+                  <span class="badge w-50 bg-danger bg-danger.bg-gradient rounded-pill">Clear All
+
+                  </span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="d-grid gap-3">
+              <button [disabled]="isSubmitting" cButton color="primary" variant="outline" type="button"
+                (click)="addRecord()">
+                <c-icon name="cilPlus" class="me-2"></c-icon>
+                Add Student
+              </button>
+
+              <button cButton color="primary" type="submit"
+                [disabled]="addStudentForm.invalid || isSubmitting ||!addedStudents.length">
+                <c-spinner *ngIf="isSubmitting" size="sm" class="me-2"></c-spinner>
+                {{ isSubmitting ? 'Submitting...' : 'Submit Records' }}
+              </button>
+            </div>
+          </form>
+        </c-card-body>
+      </c-card>
+    </c-col>
+  </c-row>
+</div>

@@ -27,8 +27,8 @@ export const routes: Routes = [
         loadChildren: () => import('./admins/base/routes').then((m) => m.routes)
       },
       {
-        path: 'buttons',
-        loadChildren: () => import('./admins/buttons/routes').then((m) => m.routes)
+        path: 'institution',
+        loadChildren: () => import('./admins/institutions/routes').then((m) => m.routes)
       },
       {
         path: 'assessments',
@@ -84,7 +84,7 @@ export const routes: Routes = [
     path: 'register',
     loadComponent: () => import('./admins/pages/register/register.component').then(m => m.RegisterComponent),
     data: {
-      title: 'Register Page'
+      title: 'Signup Page'
     }
   },
   { path: '**', redirectTo: 'dashboard' }

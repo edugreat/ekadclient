@@ -1,0 +1,148 @@
+<div class="container mt-4 mt-md-5">
+  <c-row class="justify-content-center">
+    <c-col md="10" lg="8" xl="6">
+      <!-- Success Toast -->
+      <c-toaster position="top-end" class="toast-container">
+        <c-toast [autohide]="true" [delay]="5000" [visible]="showSuccessToast" class="toast-success">
+          <c-toast-header class="d-flex justify-content-between bg-success text-white">
+            <div class="d-flex align-items-center">
+              <c-icon name="cilCheckCircle" class="me-2"></c-icon>
+              <strong>Success!</strong>
+            </div>
+            <button (click)="showSuccessToast = false" class="btn-close btn-close-white"></button>
+          </c-toast-header>
+          <c-toast-body class="bg-light-success">
+            Institution registered successfully!
+          </c-toast-body>
+        </c-toast>
+      </c-toaster>
+
+      <!-- Error Toast -->
+      <c-toaster position="top-end" class="toast-container">
+        <c-toast [autohide]="true" [delay]="8000" [visible]="showErrorToast" class="toast-error">
+          <c-toast-header class="d-flex justify-content-between bg-danger text-white">
+            <div class="d-flex align-items-center">
+              <c-icon name="cilWarning" class="me-2"></c-icon>
+              <strong>Error</strong>
+            </div>
+            <button (click)="showErrorToast = false" class="btn-close btn-close-white"></button>
+          </c-toast-header>
+          <c-toast-body class="bg-light-danger">
+            {{ errorMessage }}
+          </c-toast-body>
+        </c-toast>
+      </c-toaster>
+
+      <c-card class="registration-card">
+        <c-card-header class="py-4">
+          <div class="text-center">
+            <c-icon name="cilSchool" class="header-icon"></c-icon>
+            <h3 class="mt-3 mb-0">Register Your Institution</h3>
+            <p class="text-muted mb-0">Complete the form to register your educational institution</p>
+          </div>
+        </c-card-header>
+        
+        <c-card-body class="p-4 p-md-5">
+          <form cForm [formGroup]="registrationForm" (ngSubmit)="onSubmit()">
+            <!-- Institution Name -->
+            <div class="mb-4">
+              <label cLabel for="name" class="form-label">Institution Name</label>
+              <input
+                cFormControl
+                id="name"
+                formControlName="name"
+                placeholder="Enter institution name"
+                class="form-control-lg border-start-0"
+                
+              />
+              <c-form-feedback *ngIf="isFieldInvalid('name')" class="d-flex align-items-center mt-1">
+                <c-icon name="cilInfo" class="me-1 text-danger"></c-icon>
+                Please enter a valid institution name
+              </c-form-feedback>
+            </div>
+
+            <!-- State Selection -->
+            <div class="mb-4">
+              <label cLabel for="state" class="form-label">State</label>
+              <div class="input-group">
+                <span class="input-group-text bg-light">
+                  <c-icon name="cilLocationPin"></c-icon>
+                </span>
+                <select
+                  cFormSelect
+                  id="state"
+                  formControlName="state"
+                  class="form-select-lg"
+                 
+                >
+                  <option value="">Select State</option>
+                  <option *ngFor="let region of regions" [value]="region.name">
+                    {{ region.name }}
+                  </option>
+                </select>
+              </div>
+              <c-form-feedback *ngIf="isFieldInvalid('state')" class="d-flex align-items-center mt-1">
+                <c-icon name="cilInfo" class="me-1 text-danger"></c-icon>
+                Please select a state
+              </c-form-feedback>
+            </div>
+
+            <!-- Local Government Area -->
+            <div class="mb-4">
+              <label cLabel for="localGovt" class="form-label">Local Government Area</label>
+              <div class="input-group">
+                <span class="input-group-text bg-light">
+                  <c-icon name="cilMap"></c-icon>
+                </span>
+                <select
+                  cFormSelect
+                  id="localGovt"
+                  formControlName="localGovt"
+                  class="form-select-lg"
+                 
+                  *ngIf="!isFieldInvalid('localGovt')"
+                >
+                  <option value="">Select LGA</option>
+                  <option *ngFor="let lga of localGovts" [value]="lga">
+                    {{ lga }}
+                  </option>
+                </select>
+              </div>
+              <c-form-feedback *ngIf="isFieldInvalid('localGovt')" class="d-flex align-items-center mt-1">
+                <c-icon name="cilInfo" class="me-1 text-danger"></c-icon>
+                Please select a local government area
+              </c-form-feedback>
+            </div>
+
+            <!-- Submit Button -->
+            <div class="d-grid mt-5">
+              <button
+                cButton
+                color="primary"
+                type="submit"
+                class="btn-lg py-3 shadow"
+                [disabled]="registrationForm.invalid || isLoading"
+              >
+                <c-spinner *ngIf="isLoading" size="sm" aria-hidden="true"></c-spinner>
+                {{ isLoading ? 'Processing...' : 'Register Institution' }}
+              </button>
+            </div>
+          </form>
+        </c-card-body>
+        
+        <c-card-footer class="bg-light py-3">
+          <div class="d-flex flex-column flex-md-row justify-content-center gap-3">
+            <a [disabled]="isLoading" cButton color="secondary" class="btn-outline-primary" [routerLink]="['/register']">
+              <c-icon name="cilUserPlus" class="me-2"></c-icon>
+              Sign Up Students
+            </a>
+            <button [disabled]="isLoading" cButton color="secondary" class="btn-outline-primary" (click)="addStudents()">
+              <c-icon name="cilUserFollow" class="me-2"></c-icon>
+              Add Students to Institution
+            </button>
+          </div>
+        </c-card-footer>
+      </c-card>
+    </c-col>
+  </c-row>
+</div>

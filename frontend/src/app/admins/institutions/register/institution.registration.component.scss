@@ -1,0 +1,118 @@
+// institution.registration.component.scss
+.container {
+  padding: 2rem 1rem;
+  min-height: calc(100vh - 100px);
+}
+
+.registration-card {
+  border-radius: 1rem;
+  overflow: hidden;
+  box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.08); // Softer shadow
+  border: 1px solid rgba(0, 0, 0, 0.05); // Subtle border
+  
+  c-card-header {
+    background: #f8f9fb; // Soft milky gray background
+    color: #333; // Darker text for better contrast
+    padding: 2rem;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05); // Subtle divider
+    
+    .header-icon {
+      font-size: 2.5rem;
+      color: var(--cui-primary); // Use primary color for icon
+      background: rgba(var(--cui-primary-rgb), 0.1); // Soft icon background
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto;
+      padding: 1rem;
+    }
+    
+    h3 {
+      font-weight: 600;
+      color: #2c3e50; // Professional dark blue-gray
+    }
+    
+    p {
+      color: #6c757d; // Muted text color
+    }
+  }
+}
+
+/* Rest of the styles remain unchanged */
+.form-label {
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: var(--cui-gray-700);
+}
+
+.input-group-text {
+  border-right: none;
+  background-color: var(--cui-gray-100);
+}
+
+.form-control-lg, .form-select-lg {
+  padding: 0.8rem 1rem;
+  border-radius: 0 0.5rem 0.5rem 0;
+  border-left: none;
+  
+  &:focus {
+    box-shadow: 0 0 0 0.25rem rgba(var(--cui-primary-rgb), 0.1); // Softer focus
+    border-color: var(--cui-primary);
+  }
+}
+
+.toast-container {
+  z-index: 1100;
+  
+  .toast-success, .toast-error {
+    border-radius: 0.75rem;
+    overflow: hidden;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1); // Softer shadow
+  }
+  
+  .bg-light-success {
+    background-color: rgba(var(--cui-success-rgb), 0.08); // More subtle
+  }
+  
+  .bg-light-danger {
+    background-color: rgba(var(--cui-danger-rgb), 0.08); // More subtle
+  }
+}
+
+.btn-outline-primary {
+  border-width: 1px;
+  font-weight: 500;
+  transition: all 0.2s;
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08); // Softer hover effect
+  }
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 1.5rem 0.5rem;
+  }
+  
+  c-card-header {
+    padding: 1.5rem !important;
+    
+    .header-icon {
+      width: 60px;
+      height: 60px;
+      font-size: 2rem;
+    }
+  }
+  
+  c-card-body {
+    padding: 1.5rem !important;
+  }
+  
+  .btn-lg {
+    padding: 0.75rem !important;
+  }
+}

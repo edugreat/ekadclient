@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, signal, WritableSignal } from '@angular/core';
 import { ApiEndpoints } from '../api/api-endpoints';
-import { BehaviorSubject, Observable, of, take, tap } from 'rxjs';
+import { BehaviorSubject, finalize, Observable, of, take, tap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -86,8 +86,10 @@ export class AuthService {
     return this.http.post<void>(this.apiEndpoints.auth.disconnect, {
       headers:{id:userId}
     }).pipe(tap(() => {
-      this.postLogoutResets();
-    }));
+      this.postLogoutResets(); 
+    }),
+  finalize(() => {this.postLogoutResets()}) 
+  );
   
 
   

@@ -112,23 +112,23 @@ export const navItems: INavData[] = [
     ]
   },
   {
-    name: 'Buttons',
-    url: '/buttons',
-    iconComponent: { name: 'cil-cursor' },
+    name: 'Institution',
+    url: '/institution',
+    iconComponent: { name: 'cil-school' },
     children: [
       {
-        name: 'Buttons',
-        url: '/buttons/buttons',
+        name: 'Registeration',
+        url: '/institution/register',
         icon: 'nav-icon-bullet'
       },
       {
-        name: 'Button groups',
-        url: '/buttons/button-groups',
+        name: 'Add students',
+        url: '/institution/add-students',
         icon: 'nav-icon-bullet'
       },
       {
-        name: 'Dropdowns',
-        url: '/buttons/dropdowns',
+        name: 'View students',
+        url: '/institution/students',
         icon: 'nav-icon-bullet'
       }
     ]

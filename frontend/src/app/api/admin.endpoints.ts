@@ -38,4 +38,8 @@ export class AdminEndpoints {
    readonly institutions = `${this.baseUrl}/admins/institutions`;
    readonly disable = `${this.baseUrl}/admins/disable`
    readonly enable = `${this.baseUrl}/admins/enable`
+
+  //  Region Management
+  readonly regions = `${this.baseUrl}/admins/regions`;
+  readonly regionalLgas = `${this.baseUrl}/admins/lgas`
 }
