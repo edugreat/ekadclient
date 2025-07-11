@@ -11,7 +11,8 @@ export class AdminEndpoints {
   // Assessment Management
    readonly assessment = `${this.baseUrl}/admins/assessment`;
    readonly modifyTest = `${this.baseUrl}/admins/modify/test`;
-  
+   readonly assessmentNames = `${this.baseUrl}/admins/assessment/names`
+
   // Question Management
    readonly updateQuestion = `${this.baseUrl}/admins/update/questions`;
    readonly deleteQuestion = `${this.baseUrl}/admins/del/question`;

@@ -44,15 +44,13 @@ export const routes: Routes = [
         loadChildren: () => import('./admins/notifications/routes').then((m) => m.routes)
       },
 
-      
-      // {
-      //   path: 'widgets',
-      //   loadChildren: () => import('./views/widgets/routes').then((m) => m.routes)
-      // },
       {
-        path: 'charts',
-        loadChildren: () => import('./admins/charts/routes').then((m) => m.routes)
+        path:'students',
+        loadChildren:() => import('./admins/performance/routes').then(m => m.routes)
+
       },
+
+  
       {
         path: 'pages',
         loadChildren: () => import('./admins/pages/routes').then((m) => m.routes)

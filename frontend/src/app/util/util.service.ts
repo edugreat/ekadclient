@@ -12,6 +12,8 @@ export class UtilService {
   private scrollQuestionSubject = new Subject<boolean>();
   scrollQuestion$ = this.scrollQuestionSubject.asObservable();
 
+  private scrollChartSubject = new Subject<boolean>();
+  scrollChart$ = this.scrollChartSubject.asObservable();
   constructor() { }
 
   scrollAssessmentInfo(flag:boolean){
@@ -22,6 +24,12 @@ export class UtilService {
   scrollQuestion(flag:boolean){
 
     this.scrollQuestionSubject.next(flag);
+  }
+
+  scrollChartIntoView(flag:boolean){
+
+   this.scrollChartSubject.next(flag);
+
   }
 
   scrollIntoView(element:HTMLElement){

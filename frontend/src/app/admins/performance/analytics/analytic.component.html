@@ -1,0 +1,68 @@
+<c-row>
+  <c-col xs="12">
+    <c-card class="mb-4">
+      <c-card-header class="d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">Student Performance Analytics</h5>
+        <div>
+          <c-badge [color]="getPerformanceBadgeColor()" class="me-3">
+            {{ getPerformanceRank() }}
+          </c-badge>
+          <select cFormSelect (change)="changeChartType($event)" class="form-select-sm">
+            <option value="all charts">All Charts</option>
+            <option *ngFor="let chart of chartTypes" [value]="chart.type" >{{chart.name}}</option>
+            
+          </select>
+        </div>
+      </c-card-header>
+      <c-card-body>
+        <div *ngIf="isLoading()" class="text-center py-5">
+          <c-spinner color="primary"></c-spinner>
+          <p class="mt-2">Loading performance data...</p>
+        </div>
+
+        <div *ngIf="!isLoading() && errorMessage" class="alert alert-danger">
+          <c-icon name="cilWarning" class="me-2"></c-icon>
+          {{ errorMessage }}
+        </div>
+
+        <div *ngIf="!isLoading() && !errorMessage && studentPerformances.length === 0;" class="text-center py-4">
+          <p>No performance records found for this student.</p>
+          <a cButton color="primary" [routerLink]="['/assessments']">
+            Take Assessments
+          </a>
+        </div>
+
+        <div *ngIf="!isLoading() && studentPerformances.length > 0">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <div>
+              <strong>Overall Average:</strong> {{ toPrecision(averageAssessmentScore) }}%
+            </div>
+            <button cButton color="secondary" variant="outline" (click)="shareChart()">
+              <c-icon name="cil-share"></c-icon> Share
+            </button>
+          </div>
+        </div>
+      </c-card-body>
+    </c-card>
+  </c-col>
+</c-row>
+
+
+<div *ngIf="studentPerformances.length  > 0 && chartReady()" >
+  <c-row>
+    <c-col *ngFor="let chartObj of chartObjects"
+     xs="12" [md]="studentPerformances.length === 1 ? 12 : 6" 
+     [lg]="studentPerformances.length === 1 ? 12 : 6">
+     <c-card class="mb-4" >
+      <c-card-header>
+{{getChartType(chartObj)|uppercase}} CHART
+      </c-card-header>
+       <c-card-body>
+      <c-chart [type]="getChartType(chartObj)" [data]="chartObj[getChartType(chartObj)]"
+       [options]="options" />
+     </c-card-body>
+     </c-card>
+    </c-col>
+  </c-row>
+</div>
+

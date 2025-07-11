@@ -1,0 +1,132 @@
+<div class="container mt-4">
+  <!-- Error Toast -->
+  <c-toaster position="top-end">
+    <c-toast [visible]="showErrorToast" color="danger" [autohide]="true" [delay]="5000">
+      <c-toast-header class="d-flex justify-content-between">
+        <strong>Error</strong>
+        <button (click)="showErrorToast = false" class="btn-close"></button>
+      </c-toast-header>
+      <c-toast-body>
+        <c-icon name="cilWarning" class="me-2"></c-icon>
+        {{ errorMessage }}
+      </c-toast-body>
+    </c-toast>
+  </c-toaster>
+
+  <c-card>
+    <c-card-header>
+      <div class="d-flex justify-content-between align-items-center">
+        <h3>Student Performance</h3>
+        <div class="d-flex gap-3 align-items-center">
+          <!-- Status Filter -->
+          <div>
+            <select 
+              cFormSelect 
+              (change)="filterByStatus($event)"
+              class="form-select-sm"
+            >
+              <option value="all">All Statuses</option>
+              <option *ngFor="let status of statuses" [value]="status">
+                {{ status }}
+              </option>
+            </select>
+          </div>
+          
+          <!-- Sort Controls -->
+          <div class="d-flex gap-2">
+            <button cButton color="secondary" variant="outline" (click)="toggleSort('firstName')">
+              <c-icon [name]="sortField === 'firstName' ? 
+                (sortDirection === 'asc' ? 'cilSortAlphaUp' : 'cilSortAlphaDown') : 'cilFilter'"></c-icon>
+              First Name
+            </button>
+            <button cButton color="secondary" variant="outline" (click)="toggleSort('lastName')">
+              <c-icon [name]="sortField === 'lastName' ? 
+                (sortDirection === 'asc' ? 'cilSortAlphaUp' : 'cilSortAlphaDown') : 'cilFilter'"></c-icon>
+              Last Name
+            </button>
+            <button cButton color="secondary" variant="outline" (click)="toggleSort('status')">
+              <c-icon [name]="sortField === 'status' ? 
+                (sortDirection === 'asc' ? 'cilSortAlphaUp' : 'cilSortAlphaDown') : 'cilFilter'"></c-icon>
+              Status
+            </button>
+          </div>
+        </div>
+      </div>
+    </c-card-header>
+
+    <c-card-body>
+      <div *ngIf="isLoading()" class="text-center py-5">
+        <c-spinner color="primary"></c-spinner>
+        <p class="mt-2">Loading students...</p>
+      </div>
+
+      <div *ngIf="!isLoading()">
+        <!-- Student List -->
+        <div>
+          <div *ngFor="let student of students; let i=index" class="mb-3 student-item">
+            <div class="d-flex justify-content-between align-items-center">
+              <div>
+                <div class="d-flex align-items-center gap-2">
+                  <h5 class="mb-0">
+                    {{ student.firstName }} {{ student.lastName }}
+                  </h5>
+                  <c-badge [color]="getStatusBadgeColor(student.status)">
+                    {{ student.status }}
+                  </c-badge>
+                </div>
+                <div class="text-muted">{{ student.email }}</div>
+              </div>
+              <div class="d-flex gap-2">
+                <button cButton [color]="clickedBtn === i ? 'primary' : 'info'" (click)="getAnalytics(student.id, i)">
+                  Analytics
+                </button>
+                <button cButton color="danger" variant="outline" (click)="deleteAccount(student.id)">
+                  Delete
+                </button>
+                <button *ngIf="!student.accountEnabled" cButton color="success" variant="outline" (click)="enableAccount(student.id)">
+                  Enable
+                </button>
+                <button *ngIf="student.accountEnabled" cButton color="warning" variant="outline" (click)="disableAccount(student.id)">
+                  Disable
+                </button>
+              </div>
+            </div>
+        </div>
+    </div>
+
+        <!-- Pagination -->
+        <div class="d-flex justify-content-between align-items-center mt-4">
+          <div>
+            Showing page {{ pagination.currentPage + 1 }} of {{ pagination.totalPages }}
+            ({{ pagination.totalElements }} total students)
+          </div>
+          <div class="d-flex gap-2">
+            <button 
+              cButton 
+              color="primary" 
+              variant="outline" 
+              (click)="changePage(pagination.currentPage - 1)" 
+              [disabled]="pagination.currentPage === 0"
+            >
+              Previous
+            </button>
+            <button 
+              cButton 
+              color="primary" 
+              variant="outline" 
+              (click)="changePage(pagination.currentPage + 1)" 
+              [disabled]="pagination.currentPage >= pagination.totalPages - 1"
+            >
+              Next
+            </button>
+          </div>
+        </div>
+      </div>
+    </c-card-body>
+  </c-card>
+</div>
+<hr>
+
+<div #routerOutlet>
+<router-outlet/>
+</div>

@@ -1,6 +1,6 @@
 import { HttpClient, HttpResponse, HttpStatusCode} from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { BehaviorSubject, catchError, map, Observable, of, tap } from 'rxjs';
+import { BehaviorSubject, catchError, finalize, map, Observable, of, tap } from 'rxjs';
 import { ApiEndpoints } from '../api/api-endpoints';
 import { ApiResponseObject } from '../util/api.response';
 
@@ -26,8 +26,9 @@ export class AdminService {
  private assessmentCategoriesCache?:AssessmentCategory;
  private studentListCache?:StudentInfo;
  private subjectObjectCache?:SubjectObject;
- private studenterformanceCache?:StudentPerformanceInfo;
+ 
  private assessmentQuestionCache:Question[] = []
+ private assessmentNames:string[] = [];
  
 
 
@@ -53,14 +54,30 @@ export class AdminService {
   }
 
   // fetches a paginated view of student list sorting the list by student's first name and last name all in ascending order 
-  fetchStudentList(page:number, pageSize:number):Observable<StudentInfo>{
+  fetchStudentList(page?:number, pageSize?:number, status?:string):Observable<StudentInfo>{
 
-    if(this.studentListCache){
+    if(status){
 
-      return of(this.studentListCache)
+      return this.http.get<_StudentInfo>(`${this.apiEndpoints.learning.searchByStatus}?status=${status}`).pipe(
+        map((data) => {
+          return {students: data._embedded.students, page: data.page}
+        })
+      )
     }
 
-    return this.http.get<StudentInfo>(`${this.apiEndpoints.learning.students}?page=${page}&size=${pageSize}&sort=firstName,asc&sort=lastName,asc`)
+    return this.http.get<_StudentInfo>(`${this.apiEndpoints.learning.students}?page=${page}&size=${pageSize}&sort=firstName,asc&sort=lastName,asc`).pipe(
+      map((data) =>{
+
+        const studentInfo:StudentInfo = {
+          students:data._embedded.students,
+          page: data.page
+
+        }
+      
+        return studentInfo;
+      }),
+     
+    )
     
     
   }
@@ -93,6 +110,20 @@ export class AdminService {
 
   }
 
+  clearStudentListCache(){
+
+    this.studentListCache?.students.splice(0);
+  }
+
+  removeFromCache(studentId:number){
+
+      const index = this.studentListCache?.students.findIndex(s => s.id === studentId);
+
+      if(index && index >= 0){
+        this.studentListCache?.students.splice(index, 1);
+      }
+  }
+
 
   // Enables student's account
   enableStudentAccount(studentId: number):Observable<HttpResponse<number>> {
@@ -102,25 +133,46 @@ export class AdminService {
   }
 
 // fetches student's assessment performance information for the student with the given student id
-fetchStudentPerformanceInfo(studentId:number):Observable<StudentPerformanceInfo>{
+fetchStudentPerformanceInfo(studentId:number):Observable<StudentPerformance[]>{
 
-  if(this.studenterformanceCache){
 
-    return of(this.studenterformanceCache);
-  }
-
-  return this.http.get<StudentPerformanceInfo>(`${this.apiEndpoints.learning.students}/${studentId}/studentTests`)
+  return this.http.get<StudentPerformanceInfo>(`${this.apiEndpoints.learning.students}/${studentId}/studentTests`).pipe(
+   
+    map((info) => {
+     return info._embedded.StudentTests
+  
+     
+    })
+  )
 
 }
 
-// fetches the names of an assessment using the given studentTest id
-fetchAssessmentNames(studentTestId:number):Observable<any>{
+// fetches the names assessments for the given studentTestIds
+fetchAssessmentNames(studentTestIds:number[]):Observable<string[]>{
 
-  return this.http.get<any>(`${this.apiEndpoints.learning.studentTests}/${studentTestId}/test`).pipe(
-    map((result) => {
+  if(this.assessmentNames.length) return of(this.assessmentNames);
+  
+  return this.http.get<ApiResponseObject<string[]>>(`${this.apiEndpoints.admin.assessmentNames}`,
+  {
+    headers:{
+      'studentTestIds':`${studentTestIds}`
+    }
+  }
+  ).pipe(
+    map((response) => {
+      if(!response.success || ! response.data){
 
-      return {testName:result.testName}
-    })
+        throw new Error(response.error || 'Unable to fetch assessments')
+      }
+
+      this.assessmentNames = response.data;
+
+      return response.data;
+    }),
+
+     catchError((err) => {
+          throw new Error(err.message || 'Failed to fetch topics');
+        })
   )
   
 }
@@ -159,9 +211,9 @@ public fetchQuestionsForTestId(testId:number):Observable<Question[]>{
 
 public deleteStudent(studentId:number):Observable<HttpResponse<number>>{
 
-  this.studentListCache = undefined;
+ 
 
-  return this.http.delete<HttpStatusCode>(`${this.apiEndpoints.admin.delete}?studentId=${studentId}`,{observe:'response'});
+  return this.http.delete<HttpStatusCode>(`${this.apiEndpoints.admin.delete}?studentId=${studentId}`,{observe:'response'})
 }
 
 updateQuestions(questions:any, testId:number):Observable<HttpResponse<number>>{
@@ -344,7 +396,7 @@ type  links =
   }
 
   // Student information returned by the hateos link
-  export interface StudentInfo{
+  export interface _StudentInfo{
 
     _embedded:{
 
@@ -364,11 +416,28 @@ export interface Student{
   firstName:string,
   lastName:string,
   email:string,
+  status:string,
   mobileNumber:string,
   accountCreationDate:string,
   accountEnabled:boolean,
-  lockedAccount:boolean
+  lockedAccount:boolean,
+
+  
 }
+
+export interface StudentInfo {
+
+  students:Student[],
+  page:{
+    size:number,
+    number:number
+    totalElements:number,
+    totalPages:number
+  }
+
+}
+
+
 
 // An interface representing student's performance information on assessments they had taken
 export interface StudentPerformanceInfo{

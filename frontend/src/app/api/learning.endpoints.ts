@@ -12,5 +12,7 @@ export class LearningEndpoints {
    readonly levels = `${this.baseUrl}/learning/levels`;
    readonly students = `${this.baseUrl}/learning/students`;
    readonly studentTests = `${this.baseUrl}/learning/studentTests`;
+  
    readonly tests = `${this.baseUrl}/learning/tests`;
+   readonly searchByStatus = `${this.baseUrl}/learning/students/search/status`
 }
